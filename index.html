@@ -31,17 +31,30 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            background-color: white;
         }
-        .checkbox-group {
+        .input-group {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
+            margin-bottom: 20px;
         }
-        .checkbox-item {
+        .input-item {
+            flex: 1 1 calc(20% - 10px);  /* 20% width for 5 items per row, minus the gap */
+            min-width: 200px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 5px;
+            padding: 8px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        .oil-input {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
         }
         .results {
             background-color: white;
@@ -58,7 +71,7 @@
             padding: 10px;
             text-align: left;
             border-bottom: 1px solid #ddd;
-            vertical-align: top;  /* Align content to top */
+            vertical-align: top;
         }
         th {
             background-color: #f5f5f5;
@@ -83,7 +96,12 @@
             border: 1px solid #ddd;
             border-radius: 4px;
         }
-        /* Add spacing between line breaks */
+        .conversion-needed {
+            color: #ff6b6b;
+        }
+        .has-all-oils {
+            color: #51cf66;
+        }
         br {
             margin-bottom: 5px;
         }
@@ -94,67 +112,77 @@
         <h1>Oil Combinations</h1>
         
         <div class="filters">
-            <h2>Filter by Oils</h2>
+            <h2>Available Oils</h2>
             <input type="text" id="searchInput" class="search-bar" placeholder="Search combinations...">
-            <div class="checkbox-group" id="oilFilters">
+            <div class="input-group" id="oilInputs">
                 
-    <div class="checkbox-item">
-        <input type="checkbox" id="Despair" name="oil" value="Despair">
-        <label for="Despair">Despair</label>
+    <div class="input-item">
+        <label for="Ire">Ire (T1)</label>
+        <input type="number" id="Ire" name="oil" value="0" min="0" class="oil-input" 
+               data-tier="1">
     </div>
     
 
-    <div class="checkbox-item">
-        <input type="checkbox" id="Disgust" name="oil" value="Disgust">
-        <label for="Disgust">Disgust</label>
+    <div class="input-item">
+        <label for="Guilt">Guilt (T2)</label>
+        <input type="number" id="Guilt" name="oil" value="0" min="0" class="oil-input" 
+               data-tier="2">
     </div>
     
 
-    <div class="checkbox-item">
-        <input type="checkbox" id="Envy" name="oil" value="Envy">
-        <label for="Envy">Envy</label>
+    <div class="input-item">
+        <label for="Greed">Greed (T3)</label>
+        <input type="number" id="Greed" name="oil" value="0" min="0" class="oil-input" 
+               data-tier="3">
     </div>
     
 
-    <div class="checkbox-item">
-        <input type="checkbox" id="Fear" name="oil" value="Fear">
-        <label for="Fear">Fear</label>
+    <div class="input-item">
+        <label for="Paranoia">Paranoia (T4)</label>
+        <input type="number" id="Paranoia" name="oil" value="0" min="0" class="oil-input" 
+               data-tier="4">
     </div>
     
 
-    <div class="checkbox-item">
-        <input type="checkbox" id="Greed" name="oil" value="Greed">
-        <label for="Greed">Greed</label>
+    <div class="input-item">
+        <label for="Envy">Envy (T5)</label>
+        <input type="number" id="Envy" name="oil" value="0" min="0" class="oil-input" 
+               data-tier="5">
     </div>
     
 
-    <div class="checkbox-item">
-        <input type="checkbox" id="Guilt" name="oil" value="Guilt">
-        <label for="Guilt">Guilt</label>
+    <div class="input-item">
+        <label for="Disgust">Disgust (T6)</label>
+        <input type="number" id="Disgust" name="oil" value="0" min="0" class="oil-input" 
+               data-tier="6">
     </div>
     
 
-    <div class="checkbox-item">
-        <input type="checkbox" id="Ire" name="oil" value="Ire">
-        <label for="Ire">Ire</label>
+    <div class="input-item">
+        <label for="Despair">Despair (T7)</label>
+        <input type="number" id="Despair" name="oil" value="0" min="0" class="oil-input" 
+               data-tier="7">
     </div>
     
 
-    <div class="checkbox-item">
-        <input type="checkbox" id="Isolation" name="oil" value="Isolation">
-        <label for="Isolation">Isolation</label>
+    <div class="input-item">
+        <label for="Fear">Fear (T8)</label>
+        <input type="number" id="Fear" name="oil" value="0" min="0" class="oil-input" 
+               data-tier="8">
     </div>
     
 
-    <div class="checkbox-item">
-        <input type="checkbox" id="Paranoia" name="oil" value="Paranoia">
-        <label for="Paranoia">Paranoia</label>
+    <div class="input-item">
+        <label for="Suffering">Suffering (T9)</label>
+        <input type="number" id="Suffering" name="oil" value="0" min="0" class="oil-input" 
+               data-tier="9">
     </div>
     
 
-    <div class="checkbox-item">
-        <input type="checkbox" id="Suffering" name="oil" value="Suffering">
-        <label for="Suffering">Suffering</label>
+    <div class="input-item">
+        <label for="Isolation">Isolation (T10)</label>
+        <input type="number" id="Isolation" name="oil" value="0" min="0" class="oil-input" 
+               data-tier="10">
     </div>
     
             </div>
@@ -169,6 +197,7 @@
                         <th>Oil 3</th>
                         <th>Passive</th>
                         <th>Effect</th>
+                        <th>Conversion Info</th>
                     </tr>
                 </thead>
                 <tbody id="resultsBody">
@@ -179,6 +208,7 @@
         <td>Ire</td>
         <td>Insulated Treads</td>
         <td>Gain Ailment Threshold equal to the lowest of Evasion and Armour on your Boots</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -188,6 +218,7 @@
         <td>Ire</td>
         <td>Blinding Flash</td>
         <td>20% increased Blind Effect <br> Blind Enemies when they Stun you </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -197,6 +228,7 @@
         <td>Guilt</td>
         <td>Stance Breaker</td>
         <td>50% reduced Enemy Chance to Block Sword Attacks</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -206,6 +238,7 @@
         <td>Ire</td>
         <td>Open Mind</td>
         <td>25% increased Mana Regeneration Rate</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -215,6 +248,7 @@
         <td>Greed</td>
         <td>High Alert</td>
         <td>50% increased Evasion Rating when on Full Life <br> 25% increased Stun Threshold while on Full Life </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -224,6 +258,7 @@
         <td>Ire</td>
         <td>Defensive Reflexes</td>
         <td>12% increased Block chance <br> 2 Mana gained when you Block </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -233,6 +268,7 @@
         <td>Greed</td>
         <td>Back in Action</td>
         <td>80% increased Stun Recovery</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -242,6 +278,7 @@
         <td>Guilt</td>
         <td>Eagle Eye</td>
         <td>+30 to Accuracy Rating <br> 10% increased Accuracy Rating </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -251,6 +288,7 @@
         <td>Ire</td>
         <td>Combat Alchemy</td>
         <td>10% chance for Flasks you use to not consume Charges <br> 20% increased Life and Mana Recovery from Flasks </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -260,6 +298,7 @@
         <td>Ire</td>
         <td>Volatile Catalyst</td>
         <td>10% increased Area of Effect <br> 10% increased Cooldown Recovery Rate </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -269,6 +308,7 @@
         <td>Guilt</td>
         <td>Hard to Kill</td>
         <td>40% increased Flask Life Recovery rate <br> Regenerate 0.75% of Life per second </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -278,6 +318,7 @@
         <td>Greed</td>
         <td>Sharpened Claw</td>
         <td>25% increased Attack Damage</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -287,6 +328,7 @@
         <td>Ire</td>
         <td>Backup Plan</td>
         <td>40% increased Evasion Rating if you have been Hit Recently <br> 40% increased Armour if you haven't been Hit Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -296,6 +338,7 @@
         <td>Greed</td>
         <td>Heavy Ammunition</td>
         <td>8% reduced Attack Speed <br> 40% increased Projectile Damage <br> 40% increased Projectile Stun Buildup<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -305,6 +348,7 @@
         <td>Greed</td>
         <td>Flashy Deflection</td>
         <td>12% increased Block chance <br> 40% increased Defences from Equipped Shield </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -314,6 +358,7 @@
         <td>Greed</td>
         <td>Life from Death</td>
         <td>Recover 3% of Life on Kill</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -323,6 +368,7 @@
         <td>Ire</td>
         <td>Close Confines</td>
         <td>25% chance for Projectiles to Pierce Enemies within 3m distance of you</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -332,6 +378,7 @@
         <td>Paranoia</td>
         <td>Seeing Stars</td>
         <td>25% increased Daze Buildup <br> 25% increased Daze Duration </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -341,6 +388,7 @@
         <td>Paranoia</td>
         <td>Briny Carapace</td>
         <td>60% increased Stun Threshold for each time you've been Stunned Recently</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -350,6 +398,7 @@
         <td>Guilt</td>
         <td>Strong Chin</td>
         <td>Gain Stun Threshold equal to the lowest of Evasion and Armour on your Helmet</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -359,6 +408,7 @@
         <td>Ire</td>
         <td>Catlike Agility</td>
         <td>25% increased Evasion Rating <br> 25% increased Evasion Rating if you've Dodge Rolled Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -368,6 +418,7 @@
         <td>Paranoia</td>
         <td>Careful Aim</td>
         <td>16% increased Projectile Damage <br> 40% increased Accuracy Rating at Close Range </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -377,6 +428,7 @@
         <td>Guilt</td>
         <td>Clear Space</td>
         <td>20% increased Knockback Distance <br> 20% chance toKnock Enemies Back with Hits at Close Range </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -386,6 +438,7 @@
         <td>Greed</td>
         <td>Mass Rejuvenation</td>
         <td>Regenerate 0.5% of Life per second <br> Allies in your Presence Regenerate 1% of your Maximum Life per second </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -395,6 +448,7 @@
         <td>Ire</td>
         <td>Shockwaves</td>
         <td>30% increased Area of Effect if you've Stunned an Enemy with a Two Handed Melee Weapon Recently</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -404,6 +458,7 @@
         <td>Ire</td>
         <td>Radial Force</td>
         <td>10% increased Area of Effect <br> 10% increased Area Damage </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -413,6 +468,7 @@
         <td>Paranoia</td>
         <td>Primal Protection</td>
         <td>25% increased Charm Effect Duration <br> 25% increased Charm Charges gained </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -422,6 +478,7 @@
         <td>Greed</td>
         <td>Defender's Resolve</td>
         <td>12% increased Block chance <br> Stagger empties 50% faster while your Shield is lowered </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -431,6 +488,7 @@
         <td>Paranoia</td>
         <td>Battle-hardened</td>
         <td>Hits against you have 20% reduced Critical Damage Bonus <br> 20% increased Armour and Evasion Rating <br> +5 to Strength and Dexterity<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -440,6 +498,7 @@
         <td>Guilt</td>
         <td>Stand Ground</td>
         <td>Regenerate 1% of Life per second while affected by any Damaging Ailment <br> Regenerate 1% of Life per second while stationary </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -449,6 +508,7 @@
         <td>Guilt</td>
         <td>Feel no Pain</td>
         <td>20% increased Armour and Evasion Rating <br> 20% increased Stun Threshold </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -458,6 +518,7 @@
         <td>Greed</td>
         <td>Killer Instinct</td>
         <td>30% increased Attack Damage when on Full Life <br> 50% increased Attack Damage when on Low Life </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -467,6 +528,7 @@
         <td>Paranoia</td>
         <td>Titan's Determination</td>
         <td>25% increased Stun Threshold <br> 20% increased Life Regeneration Rate while moving </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -476,6 +538,7 @@
         <td>Ire</td>
         <td>Impenetrable Shell</td>
         <td>Defend with 150% of Armour against Attacks from further than 6m</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -485,6 +548,7 @@
         <td>Paranoia</td>
         <td>Pocket Sand</td>
         <td>50% increased Blind Effect</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -494,6 +558,7 @@
         <td>Guilt</td>
         <td>Arcane Mixtures</td>
         <td>25% increased Energy Shield Recharge Rate <br> Mana Flasks gain 0.1 charges per Second </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -503,6 +568,7 @@
         <td>Paranoia</td>
         <td>Forcewave</td>
         <td>20% increased Stun Buildup <br> 20% increased Knockback Distance <br> +10 to Strength<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -512,6 +578,7 @@
         <td>Greed</td>
         <td>Careful Consideration</td>
         <td>30% reduced Evasion Rating if you have been Hit Recently <br> 100% increased Evasion Rating if you haven't been Hit Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -521,6 +588,7 @@
         <td>Paranoia</td>
         <td>Hunter's Talisman</td>
         <td>25% chance when a Charm is used to use another Charm without consuming Charges</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -530,6 +598,7 @@
         <td>Envy</td>
         <td>Investing Energies</td>
         <td>40% increased Mana Regeneration Rate while stationary <br> 20% reduced Mana Regeneration Rate while moving </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -539,6 +608,7 @@
         <td>Ire</td>
         <td>Deft Recovery</td>
         <td>30% increased Stun Recovery <br> 30% increased Stun Threshold if you haven't been Stunned Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -548,6 +618,7 @@
         <td>Guilt</td>
         <td>Altered Brain Chemistry</td>
         <td>25% increased Mana Recovery from Flasks <br> 10% increased Mana Recovery Rate during Effect of any Mana Flask </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -557,6 +628,7 @@
         <td>Ire</td>
         <td>Critical Overload</td>
         <td>15% increased Critical Hit Chance for Spells <br> 15% increased Spell Damage if you've dealt a Critical Hit Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -566,6 +638,7 @@
         <td>Guilt</td>
         <td>Deadly Flourish</td>
         <td>20% increased Melee Critical Hit Chance <br> melee critical strike chance +% when on full life [20] </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -575,6 +648,7 @@
         <td>Ire</td>
         <td>Defiance</td>
         <td>80% increased Armour and Evasion Rating when on Low Life</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -584,6 +658,7 @@
         <td>Guilt</td>
         <td>Vigilance</td>
         <td>12% increased Block chance <br> 6 Life gained when you Block </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -593,6 +668,7 @@
         <td>Envy</td>
         <td>Determined Precision</td>
         <td>30% increased Accuracy Rating at Close Range <br> +10 to Dexterity </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -602,6 +678,7 @@
         <td>Envy</td>
         <td>Initiative</td>
         <td>30% increased Melee Damage when on Full Life <br> 16% increased Attack Speed if you haven't Attacked Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -611,6 +688,7 @@
         <td>Greed</td>
         <td>Taste for Blood</td>
         <td>Gain 20 Life per Enemy Killed <br> 2% chance to Recover all Life when you Kill an Enemy </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -620,6 +698,7 @@
         <td>Envy</td>
         <td>Cross Strike</td>
         <td>20% increased Accuracy Rating while Dual Wielding <br> 3% increased Movement Speed while Dual Wielding </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -629,6 +708,7 @@
         <td>Greed</td>
         <td>Smooth Buckler</td>
         <td>12% increased Block chance <br> 10 Mana gained when you Block </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -638,6 +718,7 @@
         <td>Envy</td>
         <td>Practiced Signs</td>
         <td>6% increased Cast Speed</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -647,6 +728,7 @@
         <td>Greed</td>
         <td>Thickened Arteries</td>
         <td>5% reduced Movement Speed <br> Regenerate 1% of Life per second while stationary </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -656,6 +738,7 @@
         <td>Envy</td>
         <td>Freedom of Movement</td>
         <td>30% increased Evasion Rating <br> 30% increased Evasion Rating if you've Dodge Rolled Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -665,6 +748,7 @@
         <td>Greed</td>
         <td>Arcane Alchemy</td>
         <td>Mana Flasks gain 0.1 charges per Second <br> +10 to Intelligence </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -674,6 +758,7 @@
         <td>Paranoia</td>
         <td>Near Sighted</td>
         <td>60% increased Accuracy Rating at Close Range</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -683,6 +768,7 @@
         <td>Ire</td>
         <td>Break Focus</td>
         <td>Enemies you Mark have 15% reduced Accuracy Rating</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -692,6 +778,7 @@
         <td>Paranoia</td>
         <td>Shedding Skin</td>
         <td>40% increased Elemental Ailment Threshold <br> 10% reduced Duration of Ailments on You </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -701,6 +788,7 @@
         <td>Ire</td>
         <td>Critical Exploit</td>
         <td>25% increased Critical Hit Chance</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -710,6 +798,7 @@
         <td>Guilt</td>
         <td>Siphon</td>
         <td>Recover 2% of Mana on Kill <br> 25% increased amount of Mana Leeched </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -719,6 +808,7 @@
         <td>Guilt</td>
         <td>Fear of Death</td>
         <td>Minions have +150 to Accuracy Rating <br> 25% increased Minion Accuracy Rating </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -728,6 +818,7 @@
         <td>Paranoia</td>
         <td>Warding Potions</td>
         <td>10% reduced Flask Charges used from Mana Flasks <br> Remove a Curse when you use a Mana Flask </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -737,6 +828,7 @@
         <td>Greed</td>
         <td>Ripping Blade</td>
         <td>25% increased Damage with Swords</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -746,6 +838,7 @@
         <td>Paranoia</td>
         <td>Electrifying Nature</td>
         <td>25% increased Lightning Damage <br> 15% increased Shock Duration </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -755,6 +848,7 @@
         <td>Greed</td>
         <td>Exposed Wounds</td>
         <td>15% increased chance to inflict Ailments <br> Break 30% increased Armour on enemies affected by Ailments </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -764,6 +858,7 @@
         <td>Paranoia</td>
         <td>Unbreaking</td>
         <td>30% increased Stun Threshold <br> 30% increased Elemental Ailment Threshold </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -773,6 +868,7 @@
         <td>Envy</td>
         <td>Self Mortification</td>
         <td>Gain 20% of maximum Energy Shield as additional Stun Threshold <br> 20% increased Stun Threshold while on Full Life </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -782,6 +878,7 @@
         <td>Ire</td>
         <td>Smash</td>
         <td>20% increased Melee Damage <br> 40% increased Melee Damage against Heavy Stunned enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -791,6 +888,7 @@
         <td>Envy</td>
         <td>Resilient Soul</td>
         <td>20% increased Life Regeneration rate <br> 5% of Damage taken Recouped as Life </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -800,6 +898,7 @@
         <td>Envy</td>
         <td>Infused Flesh</td>
         <td>+20 to maximum Life <br> 8% of Damage taken Recouped as Life </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -809,6 +908,7 @@
         <td>Envy</td>
         <td>Ether Flow</td>
         <td>25% reduced Mana Regeneration Rate while stationary <br> 50% increased Mana Regeneration Rate while moving </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -818,6 +918,7 @@
         <td>Greed</td>
         <td>Essence Infusion</td>
         <td>40% increased Energy Shield Recharge Rate <br> +10 to Intelligence </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -827,6 +928,7 @@
         <td>Envy</td>
         <td>Relentless Vindicator</td>
         <td>10% increased Damage <br> 10% increased Critical Hit Chance <br> +5 to Strength and Intelligence<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -836,6 +938,7 @@
         <td>Paranoia</td>
         <td>Dispatch Foes</td>
         <td>80% increased Critical Hit Chance if you haven't dealt a Critical Hit Recently</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -845,6 +948,7 @@
         <td>Envy</td>
         <td>Heavy Drinker</td>
         <td>30% increased Flask Effect Duration <br> 20% increased Life Recovery from Flasks <br> Recover 5% of Life when you use a Life Flask while on Low Life<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -854,6 +958,7 @@
         <td>Ire</td>
         <td>Flip the Script</td>
         <td>Recover 20% of Life when you Heavy Stun a Rare or Unique Enemy</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -863,6 +968,7 @@
         <td>Disgust</td>
         <td>True Strike</td>
         <td>+10 to Dexterity <br> 20% increased Critical Hit Chance </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -872,6 +978,7 @@
         <td>Disgust</td>
         <td>Rapid Recharge</td>
         <td>25% increased Energy Shield Recharge Rate <br> 25% faster start of Energy Shield Recharge <br> Witch: Minions have 15% increased maximum Life <br> Witch: Minions Revive 15% faster </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -881,6 +988,7 @@
         <td>Ire</td>
         <td>Sharp Sight</td>
         <td>5% increased Attack Speed <br> 30% increased Accuracy Rating against Rare or Unique Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -890,6 +998,7 @@
         <td>Guilt</td>
         <td>Potent Concoctions</td>
         <td>Flasks applied to you have 25% increased Effect</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -899,6 +1008,7 @@
         <td>Disgust</td>
         <td>Shrapnel</td>
         <td>30% chance to Pierce an Enemy <br> Projectiles have 10% chance to Chain an additional time from terrain </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -908,6 +1018,7 @@
         <td>Guilt</td>
         <td>Hulking Smash</td>
         <td>30% increased Stun Buildup <br> +15 to Strength </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -917,6 +1028,7 @@
         <td>Greed</td>
         <td>Mental Perseverance</td>
         <td>10% of Damage is taken from Mana before Life</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -926,6 +1038,7 @@
         <td>Ire</td>
         <td>Unerring Impact</td>
         <td>10% increased Accuracy Rating with One Handed Melee Weapons <br> 10% increased Accuracy Rating with Two Handed Melee Weapons <br> +2 to Melee Strike Range<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -935,6 +1048,7 @@
         <td>Ire</td>
         <td>Roil</td>
         <td>10% reduced Spell Area Damage <br> Spell Skills have 30% increased Area of Effect </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -944,6 +1058,7 @@
         <td>Disgust</td>
         <td>Afterimage</td>
         <td>8% more chance to Evade Melee Attacks</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -953,6 +1068,7 @@
         <td>Greed</td>
         <td>Preemptive Strike</td>
         <td>100% increased Critical Damage Bonus against Enemies that are on Full Life</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -962,6 +1078,7 @@
         <td>Guilt</td>
         <td>Remorseless</td>
         <td>15% increased Projectile Damage <br> 30% increased Stun Buildup against enemies within 2 metres <br> +5 to Strength and Dexterity<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -971,6 +1088,7 @@
         <td>Guilt</td>
         <td>Wellspring</td>
         <td>30% increased Mana Recovery from Flasks <br> 8% increased Attack and Cast Speed during Effect of any Mana Flask </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -980,6 +1098,7 @@
         <td>Greed</td>
         <td>Regenerative Flesh</td>
         <td>Minions Recoup 10% of Damage taken as Life</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -989,6 +1108,7 @@
         <td>Disgust</td>
         <td>Adverse Growth</td>
         <td>20% reduced Life Regeneration rate <br> 20% of Damage taken Recouped as Mana </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -998,6 +1118,7 @@
         <td>Disgust</td>
         <td>Guttural Roar</td>
         <td>30% increased Warcry Speed <br> Warcry Skills have 30% increased Area of Effect </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1007,6 +1128,7 @@
         <td>Ire</td>
         <td>Blur</td>
         <td>4% increased Movement Speed <br> 20% increased Evasion Rating <br> +10 to Dexterity<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1016,6 +1138,7 @@
         <td>Paranoia</td>
         <td>Taut Flesh</td>
         <td>15% of Physical Damage taken Recouped as Life</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1025,6 +1148,7 @@
         <td>Ire</td>
         <td>Sundering</td>
         <td>25% increased Critical Damage Bonus for Attack Damage <br> +25% to Critical Damage Bonus against Stunned Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1034,6 +1158,7 @@
         <td>Disgust</td>
         <td>Roll and Strike</td>
         <td>25% increased Damage with Spears</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1043,6 +1168,7 @@
         <td>Disgust</td>
         <td>Doomsayer</td>
         <td>Herald Skills have 30% increased Area of Effect <br> Herald Skills deal 30% increased Damage </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1052,6 +1178,7 @@
         <td>Paranoia</td>
         <td>Deafening Cries</td>
         <td>25% increased Warcry Cooldown Recovery Rate <br> 8% increased Damage for each time you've Warcried Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1061,6 +1188,7 @@
         <td>Disgust</td>
         <td>Cranial Impact</td>
         <td>30% increased Stun Buildup <br> Gain an Endurance Charge when you Heavy Stun a Rare or Unique Enemy </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1070,6 +1198,7 @@
         <td>Disgust</td>
         <td>Sturdy Metal</td>
         <td>80% increased Armour from Equipped Body Armour</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1079,6 +1208,7 @@
         <td>Greed</td>
         <td>Serrated Edges</td>
         <td>10% increased Critical Hit Chance for Attacks <br> 30% increased Attack Damage against Rare or Unique Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1088,6 +1218,7 @@
         <td>Paranoia</td>
         <td>Viciousness</td>
         <td>8% increased Melee Attack Speed <br> +10 to Dexterity </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1097,6 +1228,7 @@
         <td>Disgust</td>
         <td>Potent Incantation</td>
         <td>30% increased Spell Damage <br> 5% reduced Cast Speed </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1106,6 +1238,7 @@
         <td>Paranoia</td>
         <td>Direct Approach</td>
         <td>40% increased Critical Hit Chance against Enemies that are affectedby no Elemental Ailments</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1115,6 +1248,7 @@
         <td>Envy</td>
         <td>Immaterial</td>
         <td>50% increased Evasion Rating if Energy Shield Recharge has started in the past 2 seconds <br> 30% increased Evasion Rating while you have Energy Shield </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1124,6 +1258,7 @@
         <td>Ire</td>
         <td>Quick-change Act</td>
         <td>50% increased Weapon Swap Speed</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1133,6 +1268,7 @@
         <td>Ire</td>
         <td>Reinvigoration</td>
         <td>Regenerate 1% of Life per Second if you've used a Life Flask in the past 10 seconds</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1142,6 +1278,7 @@
         <td>Disgust</td>
         <td>Twinned Tethers</td>
         <td>Link Skills Link to 1 additional random target</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1151,6 +1288,7 @@
         <td>Envy</td>
         <td>Strong Links</td>
         <td>Link Skills have 20% increased Buff Effect <br> Link Skills have 20% increased Skill Effect Duration </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1160,6 +1298,7 @@
         <td>Guilt</td>
         <td>Catapult</td>
         <td>15% increased Projectile Speed <br> 15% increased Area of Effect for Attacks </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1169,6 +1308,7 @@
         <td>Guilt</td>
         <td>Unbound Forces</td>
         <td>40% increased Chill Duration on Enemies <br> 40% increased Shock Duration <br> 25% increased Magnitude of Chill you inflict <br> 25% increased Magnitude of Shock you inflict </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1178,6 +1318,7 @@
         <td>Envy</td>
         <td>Beastial Skin</td>
         <td>100% increased Evasion Rating from Equipped Body Armour</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1187,6 +1328,7 @@
         <td>Greed</td>
         <td>Whirling Assault</td>
         <td>8% increased Attack Speed with Quarterstaves <br> Knocks Back Enemies if you get a Critical Hit with a Quarterstaff </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1196,6 +1338,7 @@
         <td>Greed</td>
         <td>Devestating Devices</td>
         <td>25% increased Trap Damage</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1205,6 +1348,7 @@
         <td>Disgust</td>
         <td>Impact Area</td>
         <td>15% increased Area of Effect if you have Stunned an Enemy Recently <br> 15% increased Area of Effect for Attacks </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1214,6 +1358,7 @@
         <td>Envy</td>
         <td>Heavy Weaponry</td>
         <td>15% increased Melee Damage <br> 15% increased Stun Buildup with Melee Damage <br> +15 to Strength<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1223,6 +1368,7 @@
         <td>Paranoia</td>
         <td>Coursing Energy</td>
         <td>40% increased Electrocute Buildup <br> 30% increased Shock Chance against Electrocuted Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1232,6 +1378,7 @@
         <td>Paranoia</td>
         <td>Spiked Whip</td>
         <td>25% increased Damage with Flails</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1241,6 +1388,7 @@
         <td>Envy</td>
         <td>Resolution</td>
         <td>10% increased Global Defences <br> 25% increased Stun Threshold </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1250,6 +1398,7 @@
         <td>Disgust</td>
         <td>Ricochet</td>
         <td>15% increased Projectile Damage <br> Projectiles have 10% chance to Chain an additional time from terrain </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1259,6 +1408,7 @@
         <td>Ire</td>
         <td>Conservative Casting</td>
         <td>20% increased Mana Regeneration Rate <br> 8% reduced Mana Cost of Skills </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1268,6 +1418,7 @@
         <td>Disgust</td>
         <td>Spreading Shocks</td>
         <td>Shocking Hits have a 50% chance to also Shock enemies in a 1.5 metre radius</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1277,6 +1428,7 @@
         <td>Disgust</td>
         <td>Piercing Shot</td>
         <td>50% chance to Pierce an Enemy</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1286,6 +1438,7 @@
         <td>Disgust</td>
         <td>No Escape</td>
         <td>Mark Skills have 60% increased Skill Effect Duration</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1295,6 +1448,7 @@
         <td>Greed</td>
         <td>Heatproofing</td>
         <td>25% of Armour also applies to Fire Damage taken from Hits</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1304,6 +1458,7 @@
         <td>Disgust</td>
         <td>Cautious Concoctions</td>
         <td>15% increased Flask Effect Duration <br> 15% increased Flask Charges gained </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1313,6 +1468,7 @@
         <td>Disgust</td>
         <td>Hale Traveller</td>
         <td>20% increased Life Recovery from Flasks <br> Life Flasks gain 0.1 charges per Second </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1322,6 +1478,7 @@
         <td>Envy</td>
         <td>Mass Hysteria</td>
         <td>Allies in your Presence have 6% increased Attack Speed <br> 6% increased Attack Speed </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1331,6 +1488,7 @@
         <td>Disgust</td>
         <td>Breaking Blows</td>
         <td>30% increased Stun Buildup <br> 15% increased Area of Effect if you have Stunned an Enemy Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1340,6 +1498,7 @@
         <td>Despair</td>
         <td>Devastation</td>
         <td>15% increased Area of Effect for Attacks <br> 15% increased Attack Area Damage </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1349,6 +1508,7 @@
         <td>Ire</td>
         <td>Savoured Blood</td>
         <td>35% increased amount of Life Leeched <br> Leech Life 20% slower </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1358,6 +1518,7 @@
         <td>Despair</td>
         <td>Vulgar Methods</td>
         <td>10% reduced maximum Mana <br> +10 to Strength <br> 35% increased Critical Hit Chance<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1367,6 +1528,7 @@
         <td>Guilt</td>
         <td>Towering Shield</td>
         <td>50% increased Defences from Equipped Shield <br> 25% increased Chance to Block if you've Blocked with Active Block Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1376,6 +1538,7 @@
         <td>Ire</td>
         <td>Pressure Points</td>
         <td>35% increased Stun Buildup <br> 35% increased Freeze Buildup </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1385,6 +1548,7 @@
         <td>Ire</td>
         <td>Finishing Blows</td>
         <td>60% increased Damage with Hits against Enemies that are on Low Life <br> 30% increased Stun Buildup against Enemies that are on Low Life </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1394,6 +1558,7 @@
         <td>Guilt</td>
         <td>Mana Blessing</td>
         <td>+20 to maximum Mana <br> 5% increased maximum Mana </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1403,6 +1568,7 @@
         <td>Guilt</td>
         <td>Leaping Ambush</td>
         <td>100% increased Critical Hit Chance against Enemies on Full Life</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1412,6 +1578,7 @@
         <td>Despair</td>
         <td>Prolonged Fury</td>
         <td>Inherent loss of Rage is 25% slower</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1421,6 +1588,7 @@
         <td>Greed</td>
         <td>Tainted Strike</td>
         <td>25% increased Critical Hit Chance for Attacks <br> 30% increased Magnitude of Non-Damaging Ailments you inflict with Critical Hits </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1430,6 +1598,7 @@
         <td>Despair</td>
         <td>Tough Claw</td>
         <td>25% increased Attack Damage</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1439,6 +1608,7 @@
         <td>Greed</td>
         <td>Clean Shot</td>
         <td>15% chance to Pierce an Enemy <br> 15% increased Projectile Damage </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1448,6 +1618,7 @@
         <td>Despair</td>
         <td>Way of the Wind</td>
         <td>25% increased Evasion if you have Hit an Enemy Recently <br> 50% increased maximum Dash Distance with Unarmed Attack Skills </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1457,6 +1628,7 @@
         <td>Despair</td>
         <td>Flow Like Water</td>
         <td>8% increased Attack and Cast Speed <br> +5 to Dexterity and Intelligence </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1466,6 +1638,7 @@
         <td>Greed</td>
         <td>Aftershocks</td>
         <td>40% increased Aftershock Area of Effect</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1475,6 +1648,7 @@
         <td>Guilt</td>
         <td>Erraticism</td>
         <td>16% increased Cast Speed if you've dealt a Critical Hit Recently <br> 10% reduced Critical Hit Chance </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1484,6 +1658,7 @@
         <td>Greed</td>
         <td>Stimulants</td>
         <td>12% increased Attack Speed during any Flask Effect</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1493,6 +1668,7 @@
         <td>Paranoia</td>
         <td>Heartstopping</td>
         <td>+10 to Intelligence <br> 25% increased Critical Hit Chance </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1502,6 +1678,7 @@
         <td>Despair</td>
         <td>Volatile Grenades</td>
         <td>25% reduced Grenade fuse duration</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1511,6 +1688,7 @@
         <td>Ire</td>
         <td>Heart Tissue</td>
         <td>6% of Damage taken Recouped as Life <br> Regenerate 0.4% of Life per second if you have been Hit Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1520,6 +1698,7 @@
         <td>Ire</td>
         <td>Blurred Motion</td>
         <td>5% increased Attack Speed <br> 10% increased Accuracy Rating <br> 5% increased Dexterity<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1529,6 +1708,7 @@
         <td>Paranoia</td>
         <td>Internal Bleeding</td>
         <td>20% chance to Aggravate Bleeding on targets you Hit with Empowered Attacks <br> Empowered Attacks deal 30% increased Damage </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1538,6 +1718,7 @@
         <td>Despair</td>
         <td>Polished Iron</td>
         <td>25% increased Armour <br> 50% of Base Armour from Equipment also added to Stun Threshold </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1547,6 +1728,7 @@
         <td>Guilt</td>
         <td>Meat Recycling</td>
         <td>15% chance to not destroy Corpses when Consuming Corpses</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1556,6 +1738,7 @@
         <td>Guilt</td>
         <td>Titanic</td>
         <td>30% increased Stun Buildup <br> 30% increased Stun Threshold <br> 5% increased Strength<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1565,6 +1748,7 @@
         <td>Paranoia</td>
         <td>Shatter Palm</td>
         <td>30% increased Stun Buildup <br> 30% increased Daze Buildup </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1574,6 +1758,7 @@
         <td>Greed</td>
         <td>Covering Ward</td>
         <td>25% increased Energy Shield Recharge Rate <br> Gain 20 Energy Shield when you Block </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1583,6 +1768,7 @@
         <td>Greed</td>
         <td>Hale Heart</td>
         <td>15% increased Life Recovery rate</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1592,6 +1778,7 @@
         <td>Paranoia</td>
         <td>Stupefy</td>
         <td>25% increased Critical Hit Chance against Dazed Enemies <br> 25% increased Damage against Dazed Enemies <br> 25% increased Daze Buildup<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1601,6 +1788,7 @@
         <td>Paranoia</td>
         <td>Thunderstruck</td>
         <td>50% increased Electrocute Buildup against Shocked Enemies <br> 50% increased Shock Chance against Electrocuted Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1610,6 +1798,7 @@
         <td>Despair</td>
         <td>Heavy Contact</td>
         <td>Hits that Heavy Stun Enemies have Culling Strike</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1619,6 +1808,7 @@
         <td>Despair</td>
         <td>Destructive Apparatus</td>
         <td>25% increased Trap Damage</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1628,6 +1818,7 @@
         <td>Envy</td>
         <td>Reaving</td>
         <td>8% increased Attack Speed with One Handed Weapons <br> +15 to Dexterity </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1637,6 +1828,7 @@
         <td>Despair</td>
         <td>Precise Point</td>
         <td>25% increased Damage with Spears</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1646,6 +1838,7 @@
         <td>Envy</td>
         <td>Barbaric Strength</td>
         <td>45% increased Critical Damage Bonus <br> 10% increased Mana Cost of Skills <br> +10 to Strength<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1655,6 +1848,7 @@
         <td>Despair</td>
         <td>Crashing Wave</td>
         <td>36% increased Damage if you've dealt a Critical Hit in the past 8 seconds</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1664,6 +1858,7 @@
         <td>Envy</td>
         <td>Flow State</td>
         <td>5% increased Skill Speed <br> 15% increased Mana Regeneration Rate </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1673,6 +1868,7 @@
         <td>Guilt</td>
         <td>Full Recovery</td>
         <td>15% increased Life Regeneration rate <br> 15% increased Mana Regeneration Rate </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1682,6 +1878,7 @@
         <td>Despair</td>
         <td>Raw Power</td>
         <td>20% increased Spell Damage <br> +10 to Intelligence <br> Witch: 16% increased Spell Damage <br> Witch: Minions deal 16% increased Damage <br> Witch: +10 to Intelligence<br> </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1691,6 +1888,7 @@
         <td>Despair</td>
         <td>Cruel Fate</td>
         <td>20% increased Critical Damage Bonus <br> 20% increased Magnitude of Non-Damaging Ailments you inflict with Critical Hits </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1700,6 +1898,7 @@
         <td>Envy</td>
         <td>Reinforced Barrier</td>
         <td>20% increased maximum Energy Shield <br> Defend with 120% of Armour while not on Low Energy Shield </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1709,6 +1908,7 @@
         <td>Despair</td>
         <td>Austerity Measures</td>
         <td>+5 to all Attributes <br> Gain 20% of maximum Energy Shield as additional Stun Threshold </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1718,6 +1918,7 @@
         <td>Despair</td>
         <td>Reverberating Impact</td>
         <td>Break 25% increased Armour <br> 16% increased Area of Effect for Attacks </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1727,6 +1928,7 @@
         <td>Envy</td>
         <td>Ancient Aegis</td>
         <td>60% increased Armour from Equipped Body Armour <br> 60% increased Energy Shield from Equipped Body Armour </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1736,6 +1938,7 @@
         <td>Paranoia</td>
         <td>Honed Instincts</td>
         <td>8% increased Projectile Speed <br> 8% increased Attack Speed <br> +10 to Dexterity<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1745,6 +1948,7 @@
         <td>Despair</td>
         <td>Blade Flurry</td>
         <td>6% increased Attack Speed while Dual Wielding <br> 15% increased Attack Critical Hit Chance while Dual Wielding </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1754,6 +1958,7 @@
         <td>Envy</td>
         <td>Devoted Protector</td>
         <td>10% increased Mana Regeneration Rate <br> Regenerate 0.5% of Life per second <br> +5 to Strength and Intelligence<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1763,6 +1968,7 @@
         <td>Disgust</td>
         <td>Immolation</td>
         <td>25% increased Magnitude of Ignite you inflict <br> +10 to Strength </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1772,6 +1978,7 @@
         <td>Ire</td>
         <td>Personal Touch</td>
         <td>20% increased Melee Damage <br> 25% increased Melee Damage against Immobilised Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1781,6 +1988,7 @@
         <td>Ire</td>
         <td>Desperate Times</td>
         <td>Regenerate 1.5% of Life per second while on Low Life <br> 40% increased Life Recovery from Flasks used when on Low Life </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1790,6 +1998,7 @@
         <td>Disgust</td>
         <td>Irreparable</td>
         <td>100% increased Armour Break Duration</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1799,6 +2008,7 @@
         <td>Despair</td>
         <td>Clever Construction</td>
         <td>25% increased Critical Hit Chance with Traps</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1808,6 +2018,7 @@
         <td>Guilt</td>
         <td>Succour</td>
         <td>30% increased Life Regeneration rate during Effect of any Life Flask</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1817,6 +2028,7 @@
         <td>Disgust</td>
         <td>Spiked Armour</td>
         <td>Gain Physical Thorns damage equal to 2% of Armour from equipped Body Armour</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1826,6 +2038,7 @@
         <td>Guilt</td>
         <td>Protraction</td>
         <td>20% increased Skill Effect Duration <br> 15% increased Duration of Damaging Ailments on Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1835,6 +2048,7 @@
         <td>Despair</td>
         <td>Vale Shelter</td>
         <td>Charms gain 0.15 charges per Second</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1844,6 +2058,7 @@
         <td>Disgust</td>
         <td>Javelin</td>
         <td>25% increased Damage with Spears</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1853,6 +2068,7 @@
         <td>Greed</td>
         <td>In the Thick of It</td>
         <td>Regenerate 2.5% of Life per second while Surrounded</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1862,6 +2078,7 @@
         <td>Greed</td>
         <td>Slippery Ice</td>
         <td>25% reduced Effect of Chill on you <br> Unaffected by Chill during Dodge Roll </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1871,6 +2088,7 @@
         <td>Disgust</td>
         <td>Deadly Swarm</td>
         <td>Minions deal 15% increased Damage <br> Minions have 20% increased Critical Hit Chance </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1880,6 +2098,7 @@
         <td>Despair</td>
         <td>Repulsion</td>
         <td>Area Skills have 20% chance to Knock Enemies Back on Hit <br> 20% increased Spell Area Damage </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1889,6 +2108,7 @@
         <td>Paranoia</td>
         <td>Deep Wounds</td>
         <td>Attack Hits Aggravate any Bleeding on targets which is older than 4 seconds</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1898,6 +2118,7 @@
         <td>Paranoia</td>
         <td>Frazzled</td>
         <td>15% increased Mana Regeneration Rate <br> 30% increased Magnitude of Shock you inflict </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1907,6 +2128,7 @@
         <td>Disgust</td>
         <td>Staunching</td>
         <td>Life Flasks gain 0.1 charges per Second <br> +10 to Strength </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1916,6 +2138,7 @@
         <td>Envy</td>
         <td>Pinned Down</td>
         <td>Enemies are Maimed for 4 seconds after becoming Unpinned <br> 40% increased Pin Buildup </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1925,6 +2148,7 @@
         <td>Disgust</td>
         <td>Overwhelming Strike</td>
         <td>20% increased Critical Hit Chance for Attacks <br> 20% increased Critical Damage Bonus for Attack Damage <br> 20% increased Stun Buildup with Critical Hits<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1934,6 +2158,7 @@
         <td>Envy</td>
         <td>Locked On</td>
         <td>15% increased Critical Hit Chance for Attacks <br> 15% increased Accuracy Rating </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1943,6 +2168,7 @@
         <td>Disgust</td>
         <td>Pin and Run</td>
         <td>30% increased Pin Buildup <br> 5% increased Movement Speed if you've Pinned an Enemy Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1952,6 +2178,7 @@
         <td>Disgust</td>
         <td>Hallowed</td>
         <td>20% increased Stun Recovery <br> Gain 20% of maximum Energy Shield as additional Stun Threshold </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1961,6 +2188,7 @@
         <td>Despair</td>
         <td>Reprisal</td>
         <td>Attack Skills deal 25% increased Damage while holding a Shield <br> 75% increased Evasion from Equipped Shield </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1970,6 +2198,7 @@
         <td>Ire</td>
         <td>Step Like Mist</td>
         <td>4% increased Movement Speed <br> 15% increased Mana Regeneration Rate <br> +5 to Dexterity and Intelligence<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1979,6 +2208,7 @@
         <td>Despair</td>
         <td>Shadow Dancing</td>
         <td>30% increased Evasion Rating if you have been Hit Recently <br> 60% faster start of Energy Shield Recharge if you've been Stunned Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1988,6 +2218,7 @@
         <td>Despair</td>
         <td>Rattling Ball</td>
         <td>25% increased Damage with Flails</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -1997,6 +2228,7 @@
         <td>Despair</td>
         <td>Hardened Wood</td>
         <td>Totems gain +20% to all Elemental Resistances <br> Totems have 20% additional Physical Damage Reduction </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2006,6 +2238,7 @@
         <td>Greed</td>
         <td>Relentless</td>
         <td>15% increased Armour <br> Regenerate 0.5% of Life per second <br> +10 to Strength<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2015,6 +2248,7 @@
         <td>Despair</td>
         <td>Escape Strategy</td>
         <td>100% increased Evasion Rating if you have been Hit Recently <br> 30% reduced Evasion Rating if you haven't been Hit Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2024,6 +2258,7 @@
         <td>Paranoia</td>
         <td>Hunker Down</td>
         <td>Recover 20 Life when you Block <br> 80% less Knockback Distance for Blocked Hits </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2033,6 +2268,7 @@
         <td>Despair</td>
         <td>Arcane Blossom</td>
         <td>15% increased Mana Recovery rate</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2042,6 +2278,7 @@
         <td>Envy</td>
         <td>Brutal</td>
         <td>10% increased Stun Buildup <br> 16% increased Melee Damage <br> +10 to Strength<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2051,6 +2288,7 @@
         <td>Despair</td>
         <td>Lasting Concoctions</td>
         <td>25% increased Flask Effect Duration <br> 25% increased Flask Charges gained </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2060,6 +2298,7 @@
         <td>Despair</td>
         <td>Sand in the Eyes</td>
         <td>10% increased Attack Speed <br> 15% chance to Blind Enemies on Hit with Attacks </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2069,6 +2308,7 @@
         <td>Ire</td>
         <td>Parrying Motion</td>
         <td>12% increased Block chance <br> 1% increased Movement Speed for each time you've Blocked in the past 10 seconds </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2078,6 +2318,7 @@
         <td>Fear</td>
         <td>Honourless</td>
         <td>25% increased Armour if you've Hit an Enemy with a Melee Attack Recently <br> 50% increased Melee Damage against Immobilised Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2087,6 +2328,7 @@
         <td>Guilt</td>
         <td>Two-Pronged Attack</td>
         <td>Minions deal 25% increased Damage</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2096,6 +2338,7 @@
         <td>Fear</td>
         <td>Far Sighted</td>
         <td>30% reduced penalty to Accuracy Rating at range</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2105,6 +2348,7 @@
         <td>Guilt</td>
         <td>Efficient Alchemy</td>
         <td>20% increased Flask and Charm Charges gained <br> 40% increased Life and Mana Recovery from Flasks while you have an active Charm </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2114,6 +2358,7 @@
         <td>Guilt</td>
         <td>Shattering Blow</td>
         <td>Break 50% of Armour on Heavy Stunning an Enemy</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2123,6 +2368,7 @@
         <td>Fear</td>
         <td>Thornhide</td>
         <td>+5% to Thorns Critical Hit Chance</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2132,6 +2378,7 @@
         <td>Greed</td>
         <td>Loose Flesh</td>
         <td>15% of Elemental Damage taken Recouped as Life</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2141,6 +2388,7 @@
         <td>Fear</td>
         <td>Spirit Bond</td>
         <td>30% increased Totem Life <br> 30% increased Totem Duration </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2150,6 +2398,7 @@
         <td>Ire</td>
         <td>Rattled</td>
         <td>+20 to maximum Mana <br> 50% increased Shock Duration </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2159,6 +2408,7 @@
         <td>Greed</td>
         <td>Swift Skewering</td>
         <td>8% increased Attack Speed with Spears</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2168,6 +2418,7 @@
         <td>Ire</td>
         <td>Colossal Weapon</td>
         <td>15% increased Area of Effect for Attacks <br> +10 to Strength </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2177,6 +2428,7 @@
         <td>Greed</td>
         <td>Advanced Munitions</td>
         <td>25% increased chance to inflict Ailments with Projectiles</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2186,6 +2438,7 @@
         <td>Guilt</td>
         <td>Tenfold Attacks</td>
         <td>4% increased Attack Speed <br> 6% increased Attack Speed if you've been Hit Recently <br> +10 to Strength<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2195,6 +2448,7 @@
         <td>Guilt</td>
         <td>Mystic Stance</td>
         <td>30% faster start of Energy Shield Recharge <br> 30% increased Stun Threshold while on Full Life </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2204,6 +2458,7 @@
         <td>Greed</td>
         <td>Curved Weapon</td>
         <td>15% increased Accuracy Rating <br> +10 to Dexterity </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2213,6 +2468,7 @@
         <td>Fear</td>
         <td>Icebreaker</td>
         <td>Gain 100% of Maximum Energy Shield as additional Freeze Threshold</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2222,6 +2478,7 @@
         <td>Paranoia</td>
         <td>Split Shot</td>
         <td>Projectiles have 75% chance for an additional Projectile when Forking</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2231,6 +2488,7 @@
         <td>Fear</td>
         <td>First Approach</td>
         <td>50% increased Critical Hit Chance against Enemies on Full Life <br> Cannot be Blinded while on Full Life <br> 80% increased Damage with Hits against Enemies that are on Full Life<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2240,6 +2498,7 @@
         <td>Paranoia</td>
         <td>Mind Eraser</td>
         <td>10% increased Mana Regeneration Rate <br> 6% of Damage taken Recouped as Mana </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2249,6 +2508,7 @@
         <td>Ire</td>
         <td>Unstoppable Barrier</td>
         <td>10% increased Block chance <br> 15% reduced Slowing Potency of Debuffs on You </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2258,6 +2518,7 @@
         <td>Fear</td>
         <td>Growing Swarm</td>
         <td>Minions have 20% increased Area of Effect <br> Minions have 20% increased Cooldown Recovery Rate </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2267,6 +2528,7 @@
         <td>Fear</td>
         <td>Reverberation</td>
         <td>Spell Skills have 20% increased Area of Effect</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2276,6 +2538,7 @@
         <td>Paranoia</td>
         <td>Proficiency</td>
         <td>+25 to Dexterity</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2285,6 +2548,7 @@
         <td>Fear</td>
         <td>Fortifying Blood</td>
         <td>20% increased amount of Life Leeched <br> 40% increased Armour and Evasion Rating while Leeching </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2294,6 +2558,7 @@
         <td>Paranoia</td>
         <td>Essence of the Storm</td>
         <td>Gain 5% of Damage as Extra Lightning Damage <br> 30% increased chance to Shock </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2303,6 +2568,7 @@
         <td>Fear</td>
         <td>Core of the Guardian</td>
         <td>100% increased Defences from Equipped Shield</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2312,6 +2578,7 @@
         <td>Paranoia</td>
         <td>Coated Arms</td>
         <td>25% increased Damage with One Handed Weapons <br> 20% increased Chance to inflict Ailments with One-Handed Attacks </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2321,6 +2588,7 @@
         <td>Fear</td>
         <td>Manifold Method</td>
         <td>50% increased amount of Mana Leeched <br> 25% increased chance to inflict Ailments against Rare or Unique Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2330,6 +2598,7 @@
         <td>Paranoia</td>
         <td>Thicket Warding</td>
         <td>20% chance for Charms you use to not consume Charges <br> Recover 5% of Mana when a Charm is used </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2339,6 +2608,7 @@
         <td>Paranoia</td>
         <td>Fireproof</td>
         <td>+15% to Fire Resistance <br> 25% reduced effect of Ignite on you </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2348,6 +2618,7 @@
         <td>Envy</td>
         <td>Dependable Ward</td>
         <td>25% increased Energy Shield Recharge Rate <br> 25% faster start of Energy Shield Recharge </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2357,6 +2628,7 @@
         <td>Ire</td>
         <td>Price of Freedom</td>
         <td>10% reduced Mana Cost of Attacks <br> 18% of Skill Mana Costs Converted to Life Costs </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2366,6 +2638,7 @@
         <td>Envy</td>
         <td>Enhanced Reflexes</td>
         <td>30% increased Evasion Rating <br> 8% increased Dexterity </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2375,6 +2648,7 @@
         <td>Ire</td>
         <td>Echoing Pulse</td>
         <td>Final Repeat of Spells has 40% increased Area of Effect</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2384,6 +2658,7 @@
         <td>Envy</td>
         <td>Vengeance</td>
         <td>40% increased Thorns damage</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2393,6 +2668,7 @@
         <td>Guilt</td>
         <td>Cold Nature</td>
         <td>25% increased Cold Damage <br> 15% increased Chill Duration on Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2402,6 +2678,7 @@
         <td>Guilt</td>
         <td>Blade Catcher</td>
         <td>Defend with 200% of Armour against Critical Hits <br> +15 to Strength </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2411,6 +2688,7 @@
         <td>Envy</td>
         <td>Jack of all Trades</td>
         <td>2% increased Damage per 5 of your lowest Attribute</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2420,6 +2698,7 @@
         <td>Greed</td>
         <td>Mental Toughness</td>
         <td>18% increased Mana Regeneration Rate <br> 15% reduced Mana Cost while not on Low Mana </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2429,6 +2708,7 @@
         <td>Envy</td>
         <td>In Your Face</td>
         <td>40% increased Melee Damage with Hits at Close Range</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2438,6 +2718,7 @@
         <td>Greed</td>
         <td>Breakage</td>
         <td>Break 60% increased Armour <br> 10% chance to Defend with 200% of Armour </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2447,6 +2728,7 @@
         <td>Envy</td>
         <td>General's Bindings</td>
         <td>Gain 8% of Evasion Rating as extra Armour</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2456,6 +2738,7 @@
         <td>Paranoia</td>
         <td>Ancestral Mending</td>
         <td>Regenerate 1% of Life per second while you have a Totem <br> Totems Regenerate 3% of Life per second </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2465,6 +2748,7 @@
         <td>Paranoia</td>
         <td>Mental Alacrity</td>
         <td>5% increased Cast Speed <br> 15% increased Mana Regeneration Rate <br> +10 to Intelligence<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2474,6 +2758,7 @@
         <td>Envy</td>
         <td>Blinding Strike</td>
         <td>24% increased Attack Damage <br> 10% chance to Blind Enemies on Hit with Attacks </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2483,6 +2768,7 @@
         <td>Fear</td>
         <td>Bestial Rage</td>
         <td>25% increased Attack Damage</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2492,6 +2778,7 @@
         <td>Disgust</td>
         <td>Gravedigger</td>
         <td>Minions Revive 15% faster <br> You gain 2% Life when one of your Minions is Revived </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2501,6 +2788,7 @@
         <td>Fear</td>
         <td>Adrenaline Rush</td>
         <td>4% increased Movement Speed if you've Killed Recently <br> 8% increased Attack Speed if you've Killed Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2510,6 +2798,7 @@
         <td>Disgust</td>
         <td>Push the Advantage</td>
         <td>40% increased Critical Damage Bonus with One Handed Melee Weapons</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2519,6 +2808,7 @@
         <td>Fear</td>
         <td>Insightfulness</td>
         <td>18% increased maximum Energy Shield <br> 12% increased Mana Regeneration Rate <br> 6% increased Intelligence<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2528,6 +2818,7 @@
         <td>Disgust</td>
         <td>Blood Rush</td>
         <td>6% increased Skill Speed <br> 6% of Skill Mana Costs Converted to Life Costs </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2537,6 +2828,7 @@
         <td>Fear</td>
         <td>Stigmata</td>
         <td>Offerings have 30% increased Maximum Life <br> Recover 3% of Life when you create an Offering </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2546,6 +2838,7 @@
         <td>Disgust</td>
         <td>Pure Energy</td>
         <td>30% increased maximum Energy Shield <br> +10 to Intelligence </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2555,6 +2848,7 @@
         <td>Fear</td>
         <td>Explosive Impact</td>
         <td>15% increased Area of Effect <br> Burning Enemies you kill have a 5% chance to Explode, dealing a tenth of their maximum Life as Fire Damage </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2564,6 +2858,7 @@
         <td>Disgust</td>
         <td>Waters of Life</td>
         <td>Recover 2% of Life when you use a Mana Flask <br> Mana Flasks gain 0.1 charges per Second </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2573,6 +2868,7 @@
         <td>Fear</td>
         <td>Shield Expertise</td>
         <td>12% increased Block chance <br> 40% increased Block Recovery </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2582,6 +2878,7 @@
         <td>Disgust</td>
         <td>Silent Guardian</td>
         <td>Minions have +20% to all Elemental Resistances</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2591,6 +2888,7 @@
         <td>Fear</td>
         <td>Multitasking</td>
         <td>15% increased Skill Effect Duration <br> 12% increased Cooldown Recovery Rate </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2600,6 +2898,7 @@
         <td>Fear</td>
         <td>Sudden Escalation</td>
         <td>16% increased Critical Hit Chance for Spells <br> 8% increased Cast Speed if you've dealt a Critical Hit Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2609,6 +2908,7 @@
         <td>Disgust</td>
         <td>Ice Walls</td>
         <td>200% increased Ice Crystal Life</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2618,6 +2918,7 @@
         <td>Fear</td>
         <td>Quick Response</td>
         <td>20% faster start of Energy Shield Recharge <br> 30% faster start of Energy Shield Recharge when not on Full Life </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2627,6 +2928,7 @@
         <td>Disgust</td>
         <td>Bringer of Order</td>
         <td>Minions deal 25% increased Damage</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2636,6 +2938,7 @@
         <td>Fear</td>
         <td>Singular Purpose</td>
         <td>5% reduced Attack Speed <br> 20% increased Stun Buildup <br> 40% increased Damage with Two Handed Weapons<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2645,6 +2948,7 @@
         <td>Disgust</td>
         <td>Acceleration</td>
         <td>3% increased Movement Speed <br> 10% increased Skill Speed </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2654,6 +2958,7 @@
         <td>Fear</td>
         <td>Bloodthirsty</td>
         <td>20% increased amount of Life Leeched <br> Leech Life 25% faster </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2663,6 +2968,7 @@
         <td>Disgust</td>
         <td>Burn Away</td>
         <td>15% increased Fire Damage <br> Damage Penetrates 10% Fire Resistance <br> 10% increased Magnitude of Ignite you inflict<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2672,6 +2978,7 @@
         <td>Despair</td>
         <td>Projectile Bulwark</td>
         <td>30% increased Armour <br> Defend with 120% of Armour against Projectile Attacks </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2681,6 +2988,7 @@
         <td>Ire</td>
         <td>Dead can Dance</td>
         <td>Minions have 25% increased Evasion Rating <br> Your Dexterity is added to your Minions </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2690,6 +2998,7 @@
         <td>Despair</td>
         <td>Deep Trance</td>
         <td>8% increased Attack Speed <br> 10% reduced Cost of Skills </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2699,6 +3008,7 @@
         <td>Ire</td>
         <td>Harsh Winter</td>
         <td>8% increased Cast Speed with Cold Skills <br> 16% increased Skill Effect Duration </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2708,6 +3018,7 @@
         <td>Despair</td>
         <td>Wasting</td>
         <td>15% increased Duration of Damaging Ailments on Enemies <br> 30% increased Damage with Hits against Enemies affected by Ailments </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2717,6 +3028,7 @@
         <td>Guilt</td>
         <td>Turn the Clock Forward</td>
         <td>20% increased Projectile Speed for Spell Skills</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2726,6 +3038,7 @@
         <td>Guilt</td>
         <td>Suffusion</td>
         <td>30% increased amount of Mana Leeched <br> Unaffected by Chill while Leeching Mana </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2735,6 +3048,7 @@
         <td>Despair</td>
         <td>Shattering</td>
         <td>25% increased Freeze Buildup <br> 15% increased Chill Duration on Enemies <br> 15% increased Magnitude of Chill you inflict<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2744,6 +3058,7 @@
         <td>Greed</td>
         <td>Heavy Armour</td>
         <td>100% of Strength Requirements from Boots, Gloves and Helmets also added to Armour</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2753,6 +3068,7 @@
         <td>Despair</td>
         <td>Sturdy Ally</td>
         <td>Minions have 25% increased maximum Life</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2762,6 +3078,7 @@
         <td>Greed</td>
         <td>Fate Finding</td>
         <td>15% reduced Reservation of Herald Skills</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2771,6 +3088,7 @@
         <td>Despair</td>
         <td>Harmonic Generator</td>
         <td>25% increased Critical Hit Chance against Shocked Enemies <br> 40% increased Magnitude of Shock you inflict with Critical Hits </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2780,6 +3098,7 @@
         <td>Paranoia</td>
         <td>Heavy Frost</td>
         <td>20% increased Freeze Buildup <br> Hits ignore Elemental Resistances of Frozen Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2789,6 +3108,7 @@
         <td>Paranoia</td>
         <td>Unbending</td>
         <td>3% increased maximum Life <br> 30% increased Stun Threshold </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2798,6 +3118,7 @@
         <td>Envy</td>
         <td>Overwhelm</td>
         <td>5% reduced Attack Speed <br> 20% increased Stun Buildup <br> 40% increased Damage with Two Handed Weapons<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2807,6 +3128,7 @@
         <td>Despair</td>
         <td>Anticipation</td>
         <td>Skills Supported by Unleash have 25% increased Seal gain frequency</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2816,6 +3138,7 @@
         <td>Envy</td>
         <td>Time Manipulation</td>
         <td>Debuffs you inflict have 10% increased Slow Magnitude <br> Debuffs on you expire 20% faster </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2825,6 +3148,7 @@
         <td>Despair</td>
         <td>Arcane Intensity</td>
         <td>3% increased Spell Damage per 100 maximum Mana</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2834,6 +3158,7 @@
         <td>Disgust</td>
         <td>Restless Dead</td>
         <td>Minions Revive 25% faster</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2843,6 +3168,7 @@
         <td>Disgust</td>
         <td>Master Fletching</td>
         <td>30% increased bonuses gained from Equipped Quiver</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2852,6 +3178,7 @@
         <td>Despair</td>
         <td>Chronomancy</td>
         <td>20% increased Skill Effect Duration <br> Debuffs you inflict have 10% increased Slow Magnitude </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2861,6 +3188,7 @@
         <td>Fear</td>
         <td>Rapid Strike</td>
         <td>+30 to Accuracy Rating <br> 8% increased Melee Attack Speed </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2870,6 +3198,7 @@
         <td>Fear</td>
         <td>Impact Force</td>
         <td>20% increased Stun Buildup <br> 25% increased Attack Area Damage </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2879,6 +3208,7 @@
         <td>Ire</td>
         <td>Path of Storms</td>
         <td>18% increased Lightning Damage <br> 30% increased chance to Shock <br> Witch: 18% increased Chaos Damage <br> Witch: 15% increased Skill Effect Duration </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2888,6 +3218,7 @@
         <td>Fear</td>
         <td>Necrotised Flesh</td>
         <td>Minions have 40% increased maximum Life <br> Minions have 10% reduced Life Recovery rate </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2897,6 +3228,7 @@
         <td>Fear</td>
         <td>Vile Mending</td>
         <td>Minions have 20% increased maximum Life <br> Minions Regenerate 3% of Life per second <br> Minions have +13% to Chaos Resistance<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2906,6 +3238,7 @@
         <td>Greed</td>
         <td>All Natural</td>
         <td>+5% to all Elemental Resistances <br> 30% increased Elemental Damage </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2915,6 +3248,7 @@
         <td>Fear</td>
         <td>Breaking Point</td>
         <td>10% increased Duration of Elemental Ailments on Enemies <br> 30% increased Magnitude of Non-Damaging Ailments you inflict </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2924,6 +3258,7 @@
         <td>Fear</td>
         <td>Primal Growth</td>
         <td>20% increased Area of Effect if you've Killed Recently <br> 10% increased Area of Effect for Attacks </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2933,6 +3268,7 @@
         <td>Fear</td>
         <td>Lay Siege</td>
         <td>1% increased Damage per 1% Chance to Block</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2942,6 +3278,7 @@
         <td>Envy</td>
         <td>Stormcharged</td>
         <td>40% increased Elemental Damage if you've dealt a Critical Hit Recently <br> 20% increased Critical Hit Chance </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2951,6 +3288,7 @@
         <td>Fear</td>
         <td>Beef</td>
         <td>+25 to Strength</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2960,6 +3298,7 @@
         <td>Fear</td>
         <td>Spellblade</td>
         <td>32% increased Spell Damage while wielding a Melee Weapon <br> +10 to Dexterity </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2969,6 +3308,7 @@
         <td>Despair</td>
         <td>Turn the Clock Back</td>
         <td>20% reduced Projectile Speed for Spell Skills</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2978,6 +3318,7 @@
         <td>Suffering</td>
         <td>Alternating Current</td>
         <td>25% increased Mana Regeneration Rate if you have Shocked an Enemy Recently <br> 20% increased Magnitude of Shock you inflict </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2987,6 +3328,7 @@
         <td>Ire</td>
         <td>Guts</td>
         <td>Recover 3% of Life for each Endurance Charge consumed <br> +1 to Maximum Endurance Charges </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -2996,6 +3338,7 @@
         <td>Guilt</td>
         <td>Frenetic</td>
         <td>5% chance that if you would gain Frenzy Charges, you instead gain up to your maximum number of Frenzy Charges <br> +1 to Maximum Frenzy Charges </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3005,6 +3348,7 @@
         <td>Ire</td>
         <td>Thrill of Battle</td>
         <td>20% increased Attack Speed while Surrounded</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3014,6 +3358,7 @@
         <td>Ire</td>
         <td>Sigil of Fire</td>
         <td>30% increased Damage with Hits against Ignited Enemies</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3023,6 +3368,7 @@
         <td>Guilt</td>
         <td>Immortal Thirst</td>
         <td>15% increased maximum Energy Shield <br> 25% increased amount of Mana Leeched </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3032,6 +3378,7 @@
         <td>Suffering</td>
         <td>Resourceful Ally</td>
         <td>Minions deal 25% increased Damage</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3041,6 +3388,7 @@
         <td>Suffering</td>
         <td>Spirit Bonds</td>
         <td>Link Skills can target Damageable Minions</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3050,6 +3398,7 @@
         <td>Ire</td>
         <td>Leather Bound Gauntlets</td>
         <td>+1 to Evasion Rating per 1 Armour on Equipped Gloves</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3059,6 +3408,7 @@
         <td>Greed</td>
         <td>Thin Ice</td>
         <td>20% increased Freeze Buildup <br> 50% increased Damage with Hits against Frozen Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3068,6 +3418,7 @@
         <td>Suffering</td>
         <td>Heavy Blade</td>
         <td>25% increased Damage with Swords</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3077,6 +3428,7 @@
         <td>Suffering</td>
         <td>Ball and Chain</td>
         <td>15% increased Damage with Flails <br> 6% increased Attack Speed with Flails </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3086,6 +3438,7 @@
         <td>Greed</td>
         <td>Echoing Frost</td>
         <td>30% increased Elemental Damage if you've Chilled an Enemy Recently</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3095,6 +3448,7 @@
         <td>Suffering</td>
         <td>Perforation</td>
         <td>20% chance for Bleeding to be Aggravated when Inflicted against Enemies on Jagged Ground <br> 40% increased Jagged Ground Duration </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3104,6 +3458,7 @@
         <td>Greed</td>
         <td>Aspiring Genius</td>
         <td>20% increased Mana Regeneration Rate <br> 10% chance to Gain Arcane Surge when you deal a Critical Hit </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3113,6 +3468,7 @@
         <td>Suffering</td>
         <td>Madness in the Bones</td>
         <td>Gain 6% of Physical Damage as extra Chaos Damage</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3122,6 +3478,7 @@
         <td>Paranoia</td>
         <td>Subterfuge Mask</td>
         <td>+2 to Evasion Rating per 1 Maximum Energy Shield on Equipped Helmet</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3131,6 +3488,7 @@
         <td>Ire</td>
         <td>Refocus</td>
         <td>30% increased Energy Shield Recharge Rate <br> 20% increased Mana Regeneration Rate </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3140,6 +3498,7 @@
         <td>Ire</td>
         <td>Ancestral Reach</td>
         <td>25% increased Totem Placement speed <br> 50% increased Totem Placement range </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3149,6 +3508,7 @@
         <td>Paranoia</td>
         <td>Slow Burn</td>
         <td>20% increased Ignite Duration on Enemies <br> 20% increased Magnitude of Ignite you inflict </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3158,6 +3518,7 @@
         <td>Guilt</td>
         <td>For the Jugular</td>
         <td>30% increased Critical Damage Bonus <br> +10 to Intelligence </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3167,6 +3528,7 @@
         <td>Guilt</td>
         <td>Ancestral Alacrity</td>
         <td>30% increased Totem Placement speed <br> 8% increased Attack and Cast Speed if you've summoned a Totem Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3176,6 +3538,7 @@
         <td>Suffering</td>
         <td>Stylebender</td>
         <td>Break 30% increased Armour on enemies affected by Ailments <br> +10 to Strength <br> 25% increased Physical Damage<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3185,6 +3548,7 @@
         <td>Paranoia</td>
         <td>Natural Immunity</td>
         <td>+4 to Ailment Threshold per Dexterity</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3194,6 +3558,7 @@
         <td>Greed</td>
         <td>Electrocution</td>
         <td>Enemies you Electrocute have 20% increased Damage taken</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3203,6 +3568,7 @@
         <td>Greed</td>
         <td>Apocalypse</td>
         <td>40% reduced Damage <br> +6% to Critical Hit Chance of Herald Skills </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3212,6 +3578,7 @@
         <td>Paranoia</td>
         <td>Sigil of Lightning</td>
         <td>30% increased Damage with Hits against Shocked Enemies</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3221,6 +3588,7 @@
         <td>Suffering</td>
         <td>Spiral into Mania</td>
         <td>10% increased Cast Speed <br> +7% to Chaos Resistance </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3230,6 +3598,7 @@
         <td>Ire</td>
         <td>Crushing Verdict</td>
         <td>5% reduced Attack Speed <br> 30% increased Stun Buildup <br> 50% increased Attack Damage<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3239,6 +3608,7 @@
         <td>Envy</td>
         <td>Cooked</td>
         <td>50% increased Critical Damage Bonus during any Flask Effect</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3248,6 +3618,7 @@
         <td>Suffering</td>
         <td>Melding</td>
         <td>40% increased maximum Energy Shield <br> 10% reduced maximum Mana </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3257,6 +3628,7 @@
         <td>Suffering</td>
         <td>Distracting Presence</td>
         <td>10% increased Cooldown Recovery Rate <br> Enemies in your Presence have 10% reduced Cooldown Recovery Rate </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3266,6 +3638,7 @@
         <td>Envy</td>
         <td>Short Shot</td>
         <td>15% reduced Projectile Speed <br> 20% increased Projectile Damage </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3275,6 +3648,7 @@
         <td>Suffering</td>
         <td>Authority</td>
         <td>20% increased Area of Effect for Attacks <br> 10% increased Cooldown Recovery Rate </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3284,6 +3658,7 @@
         <td>Suffering</td>
         <td>Morning Star</td>
         <td>30% increased Critical Hit Chance with Flails <br> 20% increased Critical Damage Bonus with Flails </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3293,6 +3668,7 @@
         <td>Greed</td>
         <td>Desensitisation</td>
         <td>25% increased Critical Damage Bonus <br> Hits against you have 25% reduced Critical Damage Bonus </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3302,6 +3678,7 @@
         <td>Envy</td>
         <td>Hindered Capabilities</td>
         <td>30% increased Damage with Hits against Hindered Enemies <br> Debuffs you inflict have 10% increased Slow Magnitude </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3311,6 +3688,7 @@
         <td>Greed</td>
         <td>Careful Assassin</td>
         <td>20% reduced Critical Damage Bonus <br> 50% increased Critical Hit Chance </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3320,6 +3698,7 @@
         <td>Suffering</td>
         <td>Mindful Awareness</td>
         <td>24% increased Evasion Rating <br> 24% increased maximum Energy Shield </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3329,6 +3708,7 @@
         <td>Suffering</td>
         <td>The Power Within</td>
         <td>20% increased Critical Damage Bonus if you've gained a Power Charge Recently <br> +1 to Maximum Power Charges </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3338,6 +3718,7 @@
         <td>Envy</td>
         <td>Lasting Trauma</td>
         <td>5% reduced Attack Speed <br> 30% increased Magnitude of Ailments you inflict <br> 20% increased Duration of Damaging Ailments on Enemies<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3347,6 +3728,7 @@
         <td>Paranoia</td>
         <td>Cruel Methods</td>
         <td>Break 40% increased Armour <br> 25% increased Physical Damage </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3356,6 +3738,7 @@
         <td>Suffering</td>
         <td>Shimmering</td>
         <td>20% increased Energy Shield Recovery Rate if you haven't been Hit Recently <br> 3% increased Movement Speed while you have Energy Shield </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3365,6 +3748,7 @@
         <td>Suffering</td>
         <td>Hefty Unit</td>
         <td>+3 to Stun Threshold per Strength</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3374,6 +3758,7 @@
         <td>Disgust</td>
         <td>Moment of Truth</td>
         <td>25% increased Critical Damage Bonus if you've dealt a Non-Critical Hit Recently <br> 20% increased Critical Hit Chance </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3383,6 +3768,7 @@
         <td>Ire</td>
         <td>Preservation</td>
         <td>25% increased Skill Effect Duration</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3392,6 +3778,7 @@
         <td>Ire</td>
         <td>Branching Bolts</td>
         <td>60% chance for Lightning Skills to Chain an additional time</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3401,6 +3788,7 @@
         <td>Disgust</td>
         <td>Echoing Flames</td>
         <td>30% increased Elemental Damage if you've Ignited an Enemy Recently</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3410,6 +3798,7 @@
         <td>Guilt</td>
         <td>Overheating Blow</td>
         <td>Hits that Heavy Stun inflict Fire Exposure</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3419,6 +3808,7 @@
         <td>Guilt</td>
         <td>Sigil of Ice</td>
         <td>30% increased Damage with Hits against Chilled Enemies</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3428,6 +3818,7 @@
         <td>Suffering</td>
         <td>Escape Velocity</td>
         <td>3% increased Movement Speed <br> 30% increased Evasion Rating </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3437,6 +3828,7 @@
         <td>Disgust</td>
         <td>Living Death</td>
         <td>Minions have +22% to all Elemental Resistances <br> Minions have +3% to all Maximum Elemental Resistances </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3446,6 +3838,7 @@
         <td>Greed</td>
         <td>Convalescence</td>
         <td>15% reduced Energy Shield Recharge Rate <br> 40% faster start of Energy Shield Recharge </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3455,6 +3848,7 @@
         <td>Greed</td>
         <td>Emboldened Avatar</td>
         <td>25% increased chance to Ignite <br> 25% increased Freeze Buildup <br> 25% increased chance to Shock <br> 25% increased Electrocute Buildup </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3464,6 +3858,7 @@
         <td>Disgust</td>
         <td>Feel the Earth</td>
         <td>25% reduced Shock duration on you <br> 40% increased Elemental Ailment Threshold </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3473,6 +3868,7 @@
         <td>Paranoia</td>
         <td>Lust for Sacrifice</td>
         <td>40% increased Minion Damage while you have at least two different active Offerings</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3482,6 +3878,7 @@
         <td>Paranoia</td>
         <td>Bolstering Yell</td>
         <td>Empowered Attacks deal 30% increased Damage <br> Warcry Skills have 30% increased Area of Effect </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3491,6 +3888,7 @@
         <td>Suffering</td>
         <td>Lucidity</td>
         <td>8% of Damage is taken from Mana before Life <br> +15 to Intelligence </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3500,6 +3898,7 @@
         <td>Disgust</td>
         <td>Impair</td>
         <td>25% increased Damage with One Handed Weapons <br> Attacks have 10% chance to Maim on Hit </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3509,6 +3908,7 @@
         <td>Envy</td>
         <td>Deadly Force</td>
         <td>30% increased Damage if you've dealt a Critical Hit in the past 8 seconds <br> 12% increased Critical Hit Chance </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3518,6 +3918,7 @@
         <td>Envy</td>
         <td>Grit</td>
         <td>5% chance that if you would gain Endurance Charges, you instead gain up to maximum Endurance Charges <br> +1 to Maximum Endurance Charges </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3527,6 +3928,7 @@
         <td>Disgust</td>
         <td>Admonisher</td>
         <td>25% increased Warcry Speed <br> 25% increased Warcry Cooldown Recovery Rate </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3536,6 +3938,7 @@
         <td>Suffering</td>
         <td>Coated Knife</td>
         <td>Critical Hits with Daggers have a 25% chance to Poison the Enemy</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3545,6 +3948,7 @@
         <td>Suffering</td>
         <td>Essence of the Mountain</td>
         <td>Gain 5% of Damage as Extra Cold Damage <br> 20% increased Freeze Buildup </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3554,6 +3958,7 @@
         <td>Ire</td>
         <td>Echoing Thunder</td>
         <td>30% increased Elemental Damage if you've Shocked an Enemy Recently</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3563,6 +3968,7 @@
         <td>Despair</td>
         <td>Vengeful Fury</td>
         <td>Gain 5 Rage when Hit by an Enemy <br> Every Rage also grants 1% increased Armour </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3572,6 +3978,7 @@
         <td>Suffering</td>
         <td>Prolonged Assault</td>
         <td>16% increased Attack Damage <br> 16% increased Skill Effect Duration <br> Buffs on you expire 10% slower<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3581,6 +3988,7 @@
         <td>Suffering</td>
         <td>Cull the Hordes</td>
         <td>25% increased Culling Strike Threshold</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3590,6 +3998,7 @@
         <td>Despair</td>
         <td>Bravado</td>
         <td>Empowered Attacks have 50% increased Stun Buildup <br> 100% increased Stun Threshold during Empowered Attacks </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3599,6 +4008,7 @@
         <td>Suffering</td>
         <td>Ruin</td>
         <td>35% increased Spell Area Damage <br> Spell Skills have 10% reduced Area of Effect </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3608,6 +4018,7 @@
         <td>Suffering</td>
         <td>Forthcoming</td>
         <td>16% reduced Skill Effect Duration <br> 10% increased Cooldown Recovery Rate </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3617,6 +4028,7 @@
         <td>Greed</td>
         <td>Quick Recovery</td>
         <td>40% increased Stun Recovery <br> Regenerate 5% of Life over 1 second when Stunned </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3626,6 +4038,7 @@
         <td>Despair</td>
         <td>Silent Shiv</td>
         <td>5% increased Attack Speed with Daggers <br> 15% increased Critical Hit Chance with Daggers </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3635,6 +4048,7 @@
         <td>Suffering</td>
         <td>Vile Wounds</td>
         <td>33% increased Damage with Hits against Enemies affected by Elemental Ailments</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3644,6 +4058,7 @@
         <td>Suffering</td>
         <td>Crystalline Flesh</td>
         <td>Minions have +20% to all Elemental Resistances <br> Minions have +5% to all Maximum Elemental Resistances </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3653,6 +4068,7 @@
         <td>Despair</td>
         <td>Fan the Flames</td>
         <td>25% reduced Ignite Duration on you <br> 40% increased Elemental Ailment Threshold </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3662,6 +4078,7 @@
         <td>Suffering</td>
         <td>Spiral into Depression</td>
         <td>3% increased Movement Speed <br> 25% increased Armour <br> 25% increased maximum Energy Shield<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3671,6 +4088,7 @@
         <td>Suffering</td>
         <td>Bolstering Presence</td>
         <td>20% increased Effect of Auras from your Skills</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3680,6 +4098,7 @@
         <td>Envy</td>
         <td>Aggravation</td>
         <td>10% chance to Aggravate Bleeding on targets you Hit with Attacks</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3689,6 +4108,7 @@
         <td>Despair</td>
         <td>Path of Winter</td>
         <td>18% increased Cold Damage <br> 30% increased Freeze Buildup <br> Witch: Minions deal 15% increased Damage <br> Witch: Minions have 3% increased Attack and Cast Speed </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3698,6 +4118,7 @@
         <td>Suffering</td>
         <td>Holy Protector</td>
         <td>Minions have 25% increased maximum Life</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3707,6 +4128,7 @@
         <td>Suffering</td>
         <td>Marked Agility</td>
         <td>30% reduced Mana Cost of Mark Skills <br> 4% increased Movement Speed if you've cast a Mark Spell Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3716,6 +4138,7 @@
         <td>Despair</td>
         <td>Unsight</td>
         <td>Enemies near Enemies you Mark are Blinded <br> Enemies you Mark cannot deal Critical Hits </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3725,6 +4148,7 @@
         <td>Suffering</td>
         <td>Necrotic Touch</td>
         <td>Minions have 40% increased Critical Hit Chance</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3734,6 +4158,7 @@
         <td>Despair</td>
         <td>Chilled to the Bone</td>
         <td>20% increased Chill Duration on Enemies <br> 30% increased Magnitude of Chill you inflict </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3743,6 +4168,7 @@
         <td>Suffering</td>
         <td>Retaliation</td>
         <td>75% increased Thorns damage if you've Blocked Recently</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3752,6 +4178,7 @@
         <td>Fear</td>
         <td>Warm the Heart</td>
         <td>25% reduced Freeze Duration on you <br> 60% increased Freeze Threshold </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3761,6 +4188,7 @@
         <td>Ire</td>
         <td>Bloodletting</td>
         <td>10% chance to inflict Bleeding on Hit <br> 15% increased Magnitude of Bleeding you inflict </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3770,6 +4198,7 @@
         <td>Ire</td>
         <td>Shattered Crystal</td>
         <td>60% reduced Ice Crystal Life</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3779,6 +4208,7 @@
         <td>Fear</td>
         <td>Intense Flames</td>
         <td>35% increased Damage with Hits against Burning Enemies</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3788,6 +4218,7 @@
         <td>Suffering</td>
         <td>Instant Reload</td>
         <td>40% increased Crossbow Reload Speed</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3797,6 +4228,7 @@
         <td>Guilt</td>
         <td>Flurry</td>
         <td>20% increased Area of Effect while Unarmed <br> 25% reduced Damage with Unarmed Attacks <br> 20% increased Unarmed Attack Speed<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3806,6 +4238,7 @@
         <td>Guilt</td>
         <td>Made to Last</td>
         <td>15% of Physical Damage prevented Recouped as Life</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3815,6 +4248,7 @@
         <td>Suffering</td>
         <td>Deflection</td>
         <td>30% increased Block chance <br> You take 10% of damage from Blocked Hits </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3824,6 +4258,7 @@
         <td>Greed</td>
         <td>Crystal Elixir</td>
         <td>40% increased Elemental Damage with Attack Skills during any Flask Effect</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3833,6 +4268,7 @@
         <td>Greed</td>
         <td>Path of Flame</td>
         <td>18% increased Fire Damage <br> 30% increased chance to Ignite <br> Witch: 15% increased Critical Hit Chance for Spells <br> Witch: 18% increased Physical Damage </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3842,6 +4278,7 @@
         <td>Fear</td>
         <td>Tides of Change</td>
         <td>25% increased Skill Effect Duration</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3851,6 +4288,7 @@
         <td>Paranoia</td>
         <td>Feral Force</td>
         <td>25% increased Attack Damage</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3860,6 +4298,7 @@
         <td>Paranoia</td>
         <td>Savagery</td>
         <td>50% increased Evasion Rating if you've consumed a Frenzy Charge Recently <br> +1 to Maximum Frenzy Charges </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3869,6 +4308,7 @@
         <td>Suffering</td>
         <td>Spectral Ward</td>
         <td>+1 to Maximum Energy Shield per 12 Evasion Rating on Equipped Body Armour</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3878,6 +4318,7 @@
         <td>Fear</td>
         <td>Immortal Infamy</td>
         <td>10% increased Energy Shield Recharge Rate <br> Recover 2% of Life on Kill <br> +10 to Intelligence<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3887,6 +4328,7 @@
         <td>Envy</td>
         <td>Warding Fetish</td>
         <td>30% increased Damage per Curse on you <br> 30% reduced effect of Curses on you <br> 60% increased Energy Shield from Equipped Focus<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3896,6 +4338,7 @@
         <td>Envy</td>
         <td>Ancestral Unity</td>
         <td>Totems have 4% increased Attack Speed per Summoned Totem</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3905,6 +4348,7 @@
         <td>Fear</td>
         <td>Dreamcatcher</td>
         <td>25% increased Spell Damage while on Full Energy Shield <br> 75% increased Energy Shield from Equipped Focus </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3914,6 +4358,7 @@
         <td>Disgust</td>
         <td>Finesse</td>
         <td>10% increased Accuracy Rating <br> Gain Accuracy Rating equal to your Intelligence </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3923,6 +4368,7 @@
         <td>Disgust</td>
         <td>Greatest Defence</td>
         <td>2% increased Attack Damage per 75 Armour or Evasion Rating on Shield</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3932,6 +4378,7 @@
         <td>Suffering</td>
         <td>Ignore Pain</td>
         <td>Gain 3 Rage when Hit by an Enemy <br> Every Rage also grants 2% increased Stun Threshold </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3941,6 +4388,7 @@
         <td>Fear</td>
         <td>Bleeding Out</td>
         <td>+250 to Accuracy against Bleeding Enemies <br> Bleeding you inflict deals Damage 10% faster </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3950,6 +4398,7 @@
         <td>Despair</td>
         <td>Equilibrium</td>
         <td>30% increased Attack Damage if you've Cast a Spell Recently <br> 10% increased Cast Speed if you've Attacked Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3959,6 +4408,7 @@
         <td>Despair</td>
         <td>Swift Claw</td>
         <td>25% increased Attack Damage</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3968,6 +4418,7 @@
         <td>Fear</td>
         <td>Spiked Shield</td>
         <td>50% increased Defences from Equipped Shield <br> 1% increased Attack Damage per 75 Armour or Evasion Rating on Shield </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3977,6 +4428,7 @@
         <td>Suffering</td>
         <td>Perfect Opportunity</td>
         <td>30% increased Stun Buildup <br> Damage with Hits is Lucky against Heavy Stunned Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3986,6 +4438,7 @@
         <td>Ire</td>
         <td>Carved Earth</td>
         <td>20% increased Totem Damage <br> 6% increased Attack and Cast Speed if you've summoned a Totem Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -3995,6 +4448,7 @@
         <td>Suffering</td>
         <td>Power Conduction</td>
         <td>25% increased Shock Duration <br> 25% increased Magnitude of Shock you inflict </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4004,6 +4458,7 @@
         <td>Suffering</td>
         <td>Pure Power</td>
         <td>2% increased Lightning Damage per 10 Intelligence</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4013,6 +4468,7 @@
         <td>Suffering</td>
         <td>Leeching Toxins</td>
         <td>30% increased Magnitude of Poison you inflict <br> Recover 2% of Life on Killing a Poisoned Enemy </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4022,6 +4478,7 @@
         <td>Greed</td>
         <td>Fulmination</td>
         <td>40% increased chance to Ignite <br> 40% increased Damage with Hits against Ignited Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4031,6 +4488,7 @@
         <td>Suffering</td>
         <td>Illuminated Crown</td>
         <td>20% increased Light Radius <br> 70% increased Energy Shield from Equipped Helmet </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4040,6 +4498,7 @@
         <td>Suffering</td>
         <td>Storm Swell</td>
         <td>Damage Penetrates 15% Cold Resistance <br> Damage Penetrates 8% Lightning Resistance </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4049,6 +4508,7 @@
         <td>Envy</td>
         <td>Entropic Incarnation</td>
         <td>Minions have +13% to Chaos Resistance <br> Minions gain 8% of Physical Damage as Chaos Damage </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4058,6 +4518,7 @@
         <td>Suffering</td>
         <td>Watchtowers</td>
         <td>Attack Skills have +1 to maximum number of Summoned Totems <br> Skills that would Summon a Totem have 20% chance to Summon two Totems instead </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4067,6 +4528,7 @@
         <td>Suffering</td>
         <td>Breath of Ice</td>
         <td>Damage Penetrates 15% Cold Resistance <br> +10 to Intelligence </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4076,6 +4538,7 @@
         <td>Suffering</td>
         <td>Ancestral Conduits</td>
         <td>12% increased Attack and Cast Speed if you've summoned a Totem Recently</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4085,6 +4548,7 @@
         <td>Despair</td>
         <td>Falcon Technique</td>
         <td>1% increased Attack Speed per 15 Dexterity</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4094,6 +4558,7 @@
         <td>Suffering</td>
         <td>Master of Hexes</td>
         <td>25% reduced Curse Duration <br> 18% increased Effect of your Curses </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4103,6 +4568,7 @@
         <td>Suffering</td>
         <td>Ancestral Artifice</td>
         <td>Attack Skills have +1 to maximum number of Summoned Totems <br> 20% increased Totem Placement range </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4112,6 +4578,7 @@
         <td>Ire</td>
         <td>Skullcrusher</td>
         <td>20% more Damage against Heavy Stunned Enemies with Maces</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4121,6 +4588,7 @@
         <td>Ire</td>
         <td>Pile On</td>
         <td>60% increased Damage against Enemies with Fully Broken Armour</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4130,6 +4598,7 @@
         <td>Isolation</td>
         <td>Spell Haste</td>
         <td>15% increased Evasion Rating <br> 8% increased Cast Speed </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4139,6 +4608,7 @@
         <td>Isolation</td>
         <td>Perpetual Freeze</td>
         <td>15% increased Freeze Buildup <br> 15% increased Chill and Freeze Duration on Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4148,6 +4618,7 @@
         <td>Guilt</td>
         <td>Asceticism</td>
         <td>Stun Threshold is based on 30% of your Energy Shield instead of Life</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4157,6 +4628,7 @@
         <td>Isolation</td>
         <td>Wither Away</td>
         <td>Unwithered enemies are Withered for 8 seconds when they enter your Presence <br> 20% increased Effect of Withered </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4166,6 +4638,7 @@
         <td>Guilt</td>
         <td>Lust for Power</td>
         <td>5% chance that if you would gain Power Charges, you instead gain up toyour maximum number of Power Charges <br> +1 to Maximum Power Charges </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4175,6 +4648,7 @@
         <td>Greed</td>
         <td>Full Salvo</td>
         <td>25% increased Damage with Crossbows for each type of Ammunition fired in the past 10 seconds</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4184,6 +4658,7 @@
         <td>Isolation</td>
         <td>Refills</td>
         <td>Life Flasks gain 0.15 charges per Second</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4193,6 +4668,7 @@
         <td>Ire</td>
         <td>Crushing Judgement</td>
         <td>25% increased Armour Break Duration <br> 25% increased Attack Area Damage </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4202,6 +4678,7 @@
         <td>Ire</td>
         <td>Dynamism</td>
         <td>40% increased Damage if you've Triggered a Skill Recently <br> Meta Skills gain 15% increased Energy </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4211,6 +4688,7 @@
         <td>Greed</td>
         <td>Shredding Force</td>
         <td>15% increased Critical Hit Chance for Spells <br> 15% increased Critical Spell Damage Bonus <br> 15% increased Magnitude of Damaging Ailments you inflict with Critical Hits<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4220,6 +4698,7 @@
         <td>Guilt</td>
         <td>Firestarter</td>
         <td>40% increased chance to Ignite <br> Enemies Ignited by you have -5% to Fire Resistance </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4229,6 +4708,7 @@
         <td>Guilt</td>
         <td>Escalation</td>
         <td>25% increased Warcry Speed <br> 20% increased Damage for each different Warcry you've used Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4238,6 +4718,7 @@
         <td>Greed</td>
         <td>Burning Nature</td>
         <td>25% increased Fire Damage <br> 15% increased Ignite Duration on Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4247,6 +4728,7 @@
         <td>Greed</td>
         <td>Unforgiving</td>
         <td>+4 to Maximum Rage <br> Inherent Rage Loss starts 1 second later </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4256,6 +4738,7 @@
         <td>Isolation</td>
         <td>Inescapable Cold</td>
         <td>40% increased Freeze Buildup <br> 20% increased Freeze Duration on Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4265,6 +4748,7 @@
         <td>Isolation</td>
         <td>Flash Storm</td>
         <td>30% increased chance to Shock <br> Damage Penetrates 15% Lightning Resistance </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4274,6 +4758,7 @@
         <td>Paranoia</td>
         <td>Whirling Onslaught</td>
         <td>50% chance to gain Onslaught on Killing Blow with Axes</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4283,6 +4768,7 @@
         <td>Isolation</td>
         <td>One with the River</td>
         <td>30% increased Defences while wielding a Staff <br> 30% increased Freeze Buildup with Quarterstaves <br> 30% increased Stun Buildup with Quarterstaves <br> 30% increased Daze Buildup with Quarterstaves </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4292,6 +4778,7 @@
         <td>Isolation</td>
         <td>Glaciation</td>
         <td>Damage Penetrates 18% Cold Resistance <br> 25% increased Cold Exposure Effect </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4301,6 +4788,7 @@
         <td>Paranoia</td>
         <td>Energise</td>
         <td>25% chance for Trigger skills to refund half of Energy Spent</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4310,6 +4798,7 @@
         <td>Guilt</td>
         <td>Reaching Strike</td>
         <td>25% increased Melee Damage <br> +2 to Melee Strike Range </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4319,6 +4808,7 @@
         <td>Isolation</td>
         <td>Heavy Buffer</td>
         <td>40% increased maximum Energy Shield <br> 10% reduced maximum Life </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4328,6 +4818,7 @@
         <td>Isolation</td>
         <td>Fast Acting Toxins</td>
         <td>Damaging Ailments deal damage 12% faster</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4337,6 +4828,7 @@
         <td>Paranoia</td>
         <td>Burnout</td>
         <td>Ignites you inflict deal Damage 15% faster</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4346,6 +4838,7 @@
         <td>Isolation</td>
         <td>Deterioration</td>
         <td>Damaging Ailments Cannot Be inflicted on you while you already have one <br> 20% increased Magnitude of Damaging Ailments you inflict </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4355,6 +4848,7 @@
         <td>Paranoia</td>
         <td>Near at Hand</td>
         <td>16% reduced Skill Effect Duration <br> 10% reduced Slowing Potency of Debuffs on You </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4364,6 +4858,7 @@
         <td>Paranoia</td>
         <td>Falcon Dive</td>
         <td>1% increased Attack Speed per 250 Accuracy Rating</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4373,6 +4868,7 @@
         <td>Envy</td>
         <td>Versatile Arms</td>
         <td>6% increased Attack Speed with One Handed Melee Weapons <br> 15% increased Accuracy Rating with One Handed Melee Weapons <br> +10 to Strength and Dexterity<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4382,6 +4878,7 @@
         <td>Isolation</td>
         <td>Backstabbing</td>
         <td>25% increased Critical Damage Bonus with Daggers</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4391,6 +4888,7 @@
         <td>Ire</td>
         <td>Impending Doom</td>
         <td>40% faster Curse Activation <br> Your Curses have 20% increased Effect if 50% of Curse Duration expired </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4400,6 +4898,7 @@
         <td>Ire</td>
         <td>Adamant Recovery</td>
         <td>Increases and Reductions to Armour also apply to Energy ShieldRecharge Rate at 40% of their value</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4409,6 +4908,7 @@
         <td>Envy</td>
         <td>Endurance</td>
         <td>+2 to Maximum Endurance Charges</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4418,6 +4918,7 @@
         <td>Guilt</td>
         <td>Pure Chaos</td>
         <td>Gain 11% of Damage as Extra Chaos Damage</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4427,6 +4928,7 @@
         <td>Guilt</td>
         <td>Sturdy Mind</td>
         <td>+30 to maximum Mana <br> 14% increased Mana Regeneration Rate </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4436,6 +4938,7 @@
         <td>Isolation</td>
         <td>Throatseeker</td>
         <td>60% increased Critical Damage Bonus <br> 20% reduced Critical Hit Chance </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4445,6 +4948,7 @@
         <td>Envy</td>
         <td>Spiral into Insanity</td>
         <td>29% increased Chaos Damage <br> 10% increased Global Defences </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4454,6 +4958,7 @@
         <td>Isolation</td>
         <td>Inner Faith</td>
         <td>20% increased Evasion Rating <br> 20% increased maximum Energy Shield <br> 25% reduced effect of Curses on you<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4463,6 +4968,7 @@
         <td>Greed</td>
         <td>Storm Surge</td>
         <td>Damage Penetrates 8% Cold Resistance <br> Damage Penetrates 15% Lightning Resistance </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4472,6 +4978,7 @@
         <td>Greed</td>
         <td>Overflowing Power</td>
         <td>+2 to Maximum Power Charges</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4481,6 +4988,7 @@
         <td>Envy</td>
         <td>Overload</td>
         <td>Damage Penetrates 10% Lightning Resistance if on Low Mana <br> Damage Penetrates 15% Lightning Resistance </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4490,6 +4998,7 @@
         <td>Paranoia</td>
         <td>Hold Focus</td>
         <td>15% increased Effect of your Mark Skills</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4499,6 +5008,7 @@
         <td>Paranoia</td>
         <td>Invocated Efficiency</td>
         <td>Recover 3% of Mana when you Invoke a Spell <br> Triggered Spells deal 45% increased Spell Damage </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4508,6 +5018,7 @@
         <td>Envy</td>
         <td>Crippling Toxins</td>
         <td>25% chance for Attacks to Maim on Hit against Poisoned Enemies <br> 25% increased Magnitude of Poison you inflict </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4517,6 +5028,7 @@
         <td>Envy</td>
         <td>Pinpoint Shot</td>
         <td>Attacks gain increased Accuracy Rating equal to their Critical Hit Chance</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4526,6 +5038,7 @@
         <td>Isolation</td>
         <td>Revenge</td>
         <td>12% increased Attack Speed if you've been Hit Recently</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4535,6 +5048,7 @@
         <td>Isolation</td>
         <td>Savouring</td>
         <td>20% chance for Flasks you use to not consume Charges</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4544,6 +5058,7 @@
         <td>Disgust</td>
         <td>Void</td>
         <td>29% increased Chaos Damage <br> Enemies you Curse have -3% to Chaos Resistance </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4553,6 +5068,7 @@
         <td>Ire</td>
         <td>Lucky Rabbit Foot</td>
         <td>30% increased Damage while you have an active Charm <br> 6% increased Movement Speed while you have an active Charm </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4562,6 +5078,7 @@
         <td>Isolation</td>
         <td>Marked for Sickness</td>
         <td>Enemies you Mark take 10% increased Damage</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4571,6 +5088,7 @@
         <td>Isolation</td>
         <td>Battle Fever</td>
         <td>5% increased Attack and Cast Speed <br> 25% increased Physical Damage </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4580,6 +5098,7 @@
         <td>Disgust</td>
         <td>Snowpiercer</td>
         <td>Damage Penetrates 15% Cold Resistance <br> +10 to Intelligence </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4589,6 +5108,7 @@
         <td>Guilt</td>
         <td>Incendiary</td>
         <td>30% increased chance to Ignite <br> 30% increased Damage with Hits against Burning Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4598,6 +5118,7 @@
         <td>Isolation</td>
         <td>Pliable Flesh</td>
         <td>6% of Damage taken Recouped as Life <br> 25% increased speed of Recoup Effects </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4607,6 +5128,7 @@
         <td>Isolation</td>
         <td>Stand and Deliver</td>
         <td>Projectiles have 40% increased Critical Damage Bonus against Enemies within 2m <br> Projectiles deal 25% increased Damage with Hits against Enemies within 2m </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4616,6 +5138,7 @@
         <td>Disgust</td>
         <td>Lasting Incantations</td>
         <td>20% increased Spell Damage <br> 20% increased Skill Effect Duration </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4625,6 +5148,7 @@
         <td>Isolation</td>
         <td>Psychic Fragmentation</td>
         <td>12% chance for Spell Skills to fire 2 additional Projectiles</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4634,6 +5158,7 @@
         <td>Isolation</td>
         <td>Breath of Lightning</td>
         <td>Damage Penetrates 15% Lightning Resistance <br> +10 to Dexterity </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4643,6 +5168,7 @@
         <td>Disgust</td>
         <td>Split the Earth</td>
         <td>10% chance to Aftershock for Slam Skills you use with Maces <br> 10% chance to Aftershock for Strike Skills you use with Maces </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4652,6 +5178,7 @@
         <td>Paranoia</td>
         <td>Stacking Toxins</td>
         <td>Targets can be affected by +1 of your Poisons at the same time <br> 20% reduced Magnitude of Poison you inflict </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4661,6 +5188,7 @@
         <td>Isolation</td>
         <td>Burning Strikes</td>
         <td>Gain 12% of Physical Damage as Extra Fire Damage</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4670,6 +5198,7 @@
         <td>Isolation</td>
         <td>Exploit</td>
         <td>25% increased Damage with Hits against Enemies affected by Elemental Ailments <br> 15% increased Duration of Ignite, Shock and Chill on Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4679,6 +5208,7 @@
         <td>Disgust</td>
         <td>Exposed to the Inferno</td>
         <td>Damage Penetrates 15% Fire Resistance <br> Fire Exposure you inflict lowers Total Fire Resistance by an extra 5% </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4688,6 +5218,7 @@
         <td>Isolation</td>
         <td>Harness the Elements</td>
         <td>15% increased Damage for each type of Elemental Ailment on Enemy</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4697,6 +5228,7 @@
         <td>Disgust</td>
         <td>Lingering Horror</td>
         <td>23% increased Chaos Damage <br> 15% increased Skill Effect Duration </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4706,6 +5238,7 @@
         <td>Despair</td>
         <td>Kite Runner</td>
         <td>3% increased Movement Speed <br> 15% increased Projectile Speed <br> 15% increased Projectile Damage<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4715,6 +5248,7 @@
         <td>Isolation</td>
         <td>Soul Bloom</td>
         <td>15% increased Energy Shield Recovery rate</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4724,6 +5258,7 @@
         <td>Ire</td>
         <td>Maiming Strike</td>
         <td>25% increased Attack Damage <br> Attacks have 25% chance to Maim on Hit </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4733,6 +5268,7 @@
         <td>Ire</td>
         <td>Grip of Evil</td>
         <td>Minions have 40% increased Critical Damage Bonus</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4742,6 +5278,7 @@
         <td>Despair</td>
         <td>Staggering Palm</td>
         <td>20% increased Critical Damage Bonus <br> 20% increased Knockback Distance <br> 20% increased Physical Damage<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4751,6 +5288,7 @@
         <td>Guilt</td>
         <td>Event Horizon</td>
         <td>53% increased Chaos Damage <br> Lose 3% of Life and Energy Shield when you use a Chaos Skill </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4760,6 +5298,7 @@
         <td>Guilt</td>
         <td>Stormbreaker</td>
         <td>15% increased Damage for each type of Elemental Ailment on Enemy</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4769,6 +5308,7 @@
         <td>Despair</td>
         <td>Climate Change</td>
         <td>20% increased Freeze Buildup <br> Gain 25% of Cold Damage as Extra Fire Damage against Frozen Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4778,6 +5318,7 @@
         <td>Isolation</td>
         <td>Unexpected Finesse</td>
         <td>10% increased Attack Damage <br> Gain Accuracy Rating equal to your Strength </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4787,6 +5328,7 @@
         <td>Greed</td>
         <td>Blood Tearing</td>
         <td>15% increased Magnitude of Bleeding you inflict <br> 25% increased Physical Damage </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4796,6 +5338,7 @@
         <td>Greed</td>
         <td>Struck Through</td>
         <td>Attacks have +1% to Critical Hit Chance</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4805,6 +5348,7 @@
         <td>Despair</td>
         <td>Reusable Ammunition</td>
         <td>15% chance for Crossbow Attacks to not consume a bolt</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4814,6 +5358,7 @@
         <td>Paranoia</td>
         <td>Pierce the Heart</td>
         <td>Arrows Pierce an additional Target</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4823,6 +5368,7 @@
         <td>Paranoia</td>
         <td>Tempered Mind</td>
         <td>20% increased Critical Damage Bonus <br> +10 to Strength <br> 20% increased Physical Damage<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4832,6 +5378,7 @@
         <td>Despair</td>
         <td>Exposed to the Storm</td>
         <td>Damage Penetrates 18% Lightning Resistance <br> 30% increased Critical Hit Chance against enemies with Lightning Exposure </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4841,6 +5388,7 @@
         <td>Isolation</td>
         <td>Cut to the Bone</td>
         <td>Break Armour on Critical Hit with Spells equal to 10% of Physical Damage dealt <br> 10% chance to inflict Bleeding on Hit <br> 20% increased Physical Damage<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4850,6 +5398,7 @@
         <td>Envy</td>
         <td>Lasting Toxins</td>
         <td>10% increased Skill Effect Duration <br> 50% increased Poison Duration </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4859,6 +5408,7 @@
         <td>Envy</td>
         <td>Lingering Whispers</td>
         <td>40% increased Curse Duration <br> 10% increased Effect of your Curses </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4868,6 +5418,7 @@
         <td>Despair</td>
         <td>Fated End</td>
         <td>30% increased Curse Duration <br> Enemies Cursed by you have 50% reduced Life Regeneration Rate <br> Enemies you Curse cannot Recharge Energy Shield<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4877,6 +5428,7 @@
         <td>Disgust</td>
         <td>Escalating Toxins</td>
         <td>10% increased Poison Duration for each Poison you have inflicted Recently, up to a maximum of 100%</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4886,6 +5438,7 @@
         <td>Disgust</td>
         <td>Final Barrage</td>
         <td>20% increased Cast Speed when on Low Life <br> 10% reduced Cast Speed when on Full Life </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4895,6 +5448,7 @@
         <td>Despair</td>
         <td>Giantslayer</td>
         <td>25% increased Damage with Hits against Rare and Unique Enemies <br> 20% increased Accuracy Rating against Rare or Unique Enemies <br> 20% increased chance to inflict Ailments against Rare or Unique Enemies<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4904,6 +5458,7 @@
         <td>Despair</td>
         <td>Endless Circuit</td>
         <td>25% chance on Consuming a Shock on an Enemy to reapply it</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4913,6 +5468,7 @@
         <td>Isolation</td>
         <td>Presence Present</td>
         <td>Allies in your Presence have +100 to Accuracy Rating <br> 35% increased Attack Damage while you have an Ally in your Presence </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4922,6 +5478,7 @@
         <td>Isolation</td>
         <td>Breath of Fire</td>
         <td>Damage Penetrates 15% Fire Resistance <br> +10 to Strength </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4931,6 +5488,7 @@
         <td>Fear</td>
         <td>Martial Artistry</td>
         <td>25% increased Accuracy Rating with Quarterstaves <br> 25% increased Critical Damage Bonus with Quarterstaves <br> +25 to Dexterity<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4940,6 +5498,7 @@
         <td>Isolation</td>
         <td>Dampening Shield</td>
         <td>28% increased maximum Energy Shield <br> Gain 12% of maximum Energy Shield as additional Stun Threshold </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4949,6 +5508,7 @@
         <td>Isolation</td>
         <td>Fervour</td>
         <td>+2 to Maximum Frenzy Charges</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4958,6 +5518,7 @@
         <td>Fear</td>
         <td>Cacophony</td>
         <td>40% increased Damage with Warcries <br> Warcry Skills have 25% increased Area of Effect </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4967,6 +5528,7 @@
         <td>Guilt</td>
         <td>Death from Afar</td>
         <td>Projectiles have 25% increased Critical Hit Chance against Enemies further than 6m <br> Projectiles deal 25% increased Damage with Hits against Enemies further than 6m </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4976,6 +5538,7 @@
         <td>Isolation</td>
         <td>Exploit the Elements</td>
         <td>24% increased Damage with Hits against Enemies affected by Elemental Ailments <br> 30% increased chance to inflict Ailments against Rare or Unique Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4985,6 +5548,7 @@
         <td>Isolation</td>
         <td>Casting Cascade</td>
         <td>15% reduced Spell Damage <br> 6% increased Cast Speed for each different Non-Instant Spell you've Cast Recently </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -4994,6 +5558,7 @@
         <td>Fear</td>
         <td>Fleshcrafting</td>
         <td>Minions gain 15% of their Maximum Life as Extra Maximum Energy Shield</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5003,6 +5568,7 @@
         <td>Isolation</td>
         <td>Grenadier</td>
         <td>Grenade Skills have +1 Cooldown Use</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5012,6 +5578,7 @@
         <td>Isolation</td>
         <td>Perfectly Placed Knife</td>
         <td>30% increased Critical Hit Chance against Bleeding Enemies <br> 20% chance to Aggravate Bleeding on targets you Critically Hit with Attacks </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5021,6 +5588,7 @@
         <td>Fear</td>
         <td>Heartbreaking</td>
         <td>35% increased Critical Damage Bonus <br> +10 to Strength </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5030,6 +5598,7 @@
         <td>Paranoia</td>
         <td>Exposed to the Cosmos</td>
         <td>Damage Penetrates 15% Cold Resistance <br> Cold Exposure you inflict lowers Total Cold Resistance by an extra 5% </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5039,6 +5608,7 @@
         <td>Isolation</td>
         <td>Controlling Magic</td>
         <td>25% increased Critical Hit Chance for Spells <br> Hits have 25% reduced Critical Hit Chance against you </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5048,6 +5618,7 @@
         <td>Isolation</td>
         <td>Surging Currents</td>
         <td>Damage Penetrates 15% Lightning Resistance <br> +10 to Dexterity </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5057,6 +5628,7 @@
         <td>Fear</td>
         <td>Smoke Inhalation</td>
         <td>Damage Penetrates 15% Fire Resistance <br> 15% increased Duration of Damaging Ailments on Enemies </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5066,6 +5638,7 @@
         <td>Isolation</td>
         <td>Offensive Stance</td>
         <td>1% increased Damage per 1% Chance to Block</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5075,6 +5648,7 @@
         <td>Isolation</td>
         <td>Supportive Ancestors</td>
         <td>25% increased Damage while you have a Totem <br> Totems have 2% increased Cast Speed per Summoned Totem <br> Totems have 2% increased Attack Speed per Summoned Totem<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5084,6 +5658,7 @@
         <td>Fear</td>
         <td>Battle Trance</td>
         <td>+8 to Maximum Rage</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5093,6 +5668,7 @@
         <td>Disgust</td>
         <td>Electric Amplification</td>
         <td>Damage Penetrates 18% Lightning Resistance <br> 25% increased Lightning Exposure Effect </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5102,6 +5678,7 @@
         <td>Isolation</td>
         <td>Relentless Fallen</td>
         <td>Minions have 20% increased Movement Speed <br> Minions have 8% increased Attack and Cast Speed </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5111,6 +5688,7 @@
         <td>Isolation</td>
         <td>Overzealous</td>
         <td>16% increased Cast Speed <br> 15% increased Mana Cost of Skills </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5120,6 +5698,7 @@
         <td>Fear</td>
         <td>Spaghettification</td>
         <td>3% increased Movement Speed <br> 29% increased Chaos Damage <br> -13% to Chaos Resistance <br> 23% reduced Light Radius <br> 7% increased Attributes<br> </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5129,6 +5708,7 @@
         <td>Isolation</td>
         <td>Lightning Quick</td>
         <td>14% increased Lightning Damage <br> 8% increased Attack and Cast Speed with Lightning Skills </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5138,6 +5718,7 @@
         <td>Fear</td>
         <td>Glazed Flesh</td>
         <td>3% of Damage Taken Recouped as Life, Mana and Energy Shield</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5147,6 +5728,7 @@
         <td>Suffering</td>
         <td>Ingenuity</td>
         <td>+25 to Intelligence</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5156,6 +5738,7 @@
         <td>Isolation</td>
         <td>Raw Mana</td>
         <td>12% increased maximum Mana <br> 10% increased Mana Cost of Skills </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5165,6 +5748,7 @@
         <td>Ire</td>
         <td>Forces of Nature</td>
         <td>Attack Damage Penetrates 15% of Enemy Elemental Resistances</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5174,6 +5758,7 @@
         <td>Ire</td>
         <td>Drenched</td>
         <td>40% increased chance to Shock <br> Gain 5% of Lightning Damage as Extra Cold Damage </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5183,6 +5768,7 @@
         <td>Suffering</td>
         <td>Total Incineration</td>
         <td>25% increased Critical Damage Bonus against Burning Enemies <br> 10% chance to refresh Ignite Duration on Critical Hit </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5192,6 +5778,7 @@
         <td>Isolation</td>
         <td>Woodland Aspect</td>
         <td>Charms applied to you have 25% increased Effect</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5201,6 +5788,7 @@
         <td>Guilt</td>
         <td>Trick Shot</td>
         <td>Projectiles have 15% chance to Chain an additional time from terrain</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5210,6 +5798,7 @@
         <td>Guilt</td>
         <td>Marked for Death</td>
         <td>Culling Strike against Enemies you Mark</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5219,6 +5808,7 @@
         <td>Suffering</td>
         <td>Voracious</td>
         <td>20% of Leech is Instant</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5228,6 +5818,7 @@
         <td>Isolation</td>
         <td>Low Tolerance</td>
         <td>60% increased Effect of Poison you inflict on targets that are not Poisoned</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5237,6 +5828,7 @@
         <td>Greed</td>
         <td>Overexposure</td>
         <td>30% increased Cold Exposure Effect <br> 30% increased Fire Exposure Effect <br> 30% increased Lightning Exposure Effect<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5246,6 +5838,7 @@
         <td>Greed</td>
         <td>General Electric</td>
         <td>40% increased chance to Shock <br> 5% increased Attack and Cast Speed with Lightning Skills </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5255,6 +5848,7 @@
         <td>Suffering</td>
         <td>Power Shots</td>
         <td>15% reduced Attack Speed with Crossbows <br> 80% increased Critical Damage Bonus with Crossbows </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5264,6 +5858,7 @@
         <td>Paranoia</td>
         <td>Volcanic Skin</td>
         <td>Gain 8% of Damage as Extra Fire Damage <br> +20% to Fire Resistance </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5273,6 +5868,7 @@
         <td>Paranoia</td>
         <td>Polymathy</td>
         <td>10% increased Attributes</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5282,6 +5878,7 @@
         <td>Suffering</td>
         <td>Right Hand of Darkness</td>
         <td>Minions have 20% increased Area of Effect <br> Minions have 10% chance to inflict Withered on Hit </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5291,6 +5888,7 @@
         <td>Isolation</td>
         <td>Stars Aligned</td>
         <td>Damage with Hits is Lucky against Enemies that are on Low Life</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5300,6 +5898,7 @@
         <td>Envy</td>
         <td>Effervescent</td>
         <td>4% increased Cast Speed for each different Non-Instant Spell you've Cast Recently</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5309,6 +5908,7 @@
         <td>Envy</td>
         <td>Left Hand of Darkness</td>
         <td>Minions have 20% additional Physical Damage Reduction <br> Minions have +23% to Chaos Resistance </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5318,6 +5918,7 @@
         <td>Suffering</td>
         <td>Coming Calamity</td>
         <td>50% increased Cold Damage while affected by Herald of Ice <br> 50% increased Fire Damage while affected by Herald of Ash <br> 50% increased Lightning Damage while affected by Herald of Thunder<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5327,6 +5928,7 @@
         <td>Disgust</td>
         <td>Cluster Bombs</td>
         <td>50% increased Grenade fuse duration <br> Grenade Skills Fire an additional Projectile </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5336,6 +5938,7 @@
         <td>Disgust</td>
         <td>One with the Storm</td>
         <td>Quarterstaff Skills that consume Power Charges count as consuming an additional Power Charge</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5345,6 +5948,7 @@
         <td>Suffering</td>
         <td>Touch the Arcane</td>
         <td>40% increased effect of Arcane Surge on you</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5354,6 +5958,7 @@
         <td>Isolation</td>
         <td>Repeating Explosives</td>
         <td>Grenades have 15% chance to activate a second time</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5363,6 +5968,7 @@
         <td>Despair</td>
         <td>Calibration</td>
         <td>30% increased maximum Energy Shield <br> 4% increased maximum Mana </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5372,6 +5978,7 @@
         <td>Despair</td>
         <td>Sniper</td>
         <td>Arrows gain Critical Hit Chance as they travel farther, up to 60% increased Critical Hit Chance</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5381,6 +5988,7 @@
         <td>Isolation</td>
         <td>Sudden Infuriation</td>
         <td>3% chance that if you would gain Rage on Hit, you instead gain up to your maximum Rage</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5390,6 +5998,7 @@
         <td>Suffering</td>
         <td>Urgent Call</td>
         <td>Recover 2% of Life and Mana when you use a Warcry <br> 24% increased Warcry Speed <br> 18% increased Warcry Cooldown Recovery Rate<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5399,6 +6008,7 @@
         <td>Fear</td>
         <td>Patient Barrier</td>
         <td>60% increased maximum Energy Shield <br> 20% slower start of Energy Shield Recharge </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5408,6 +6018,7 @@
         <td>Fear</td>
         <td>Endless Blizzard</td>
         <td>+1 to Level of all Cold Skills</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5417,6 +6028,7 @@
         <td>Suffering</td>
         <td>Fast Metabolism</td>
         <td>Life Leech effects are not removed when Unreserved Life is Filled</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5426,6 +6038,7 @@
         <td>Suffering</td>
         <td>Feathered Fletching</td>
         <td>Increases and Reductions to Projectile Speed also apply to Damage with Bows</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5435,6 +6048,7 @@
         <td>Isolation</td>
         <td>Goring</td>
         <td>5% reduced maximum Life <br> 30% increased amount of Life Leeched <br> 40% increased Physical Damage<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5444,6 +6058,7 @@
         <td>Ire</td>
         <td>Lord of Horrors</td>
         <td>Minions have 12% reduced Reservation</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5453,6 +6068,7 @@
         <td>Isolation</td>
         <td>Eldritch Will</td>
         <td>3% increased maximum Life, Mana and Energy Shield <br> Gain 20% of maximum Energy Shield as additional Stun Threshold </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5462,6 +6078,7 @@
         <td>Isolation</td>
         <td>Building Toxins</td>
         <td>25% reduced Poison Duration <br> Targets can be affected by +1 of your Poisons at the same time </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5471,6 +6088,7 @@
         <td>Greed</td>
         <td>Spike Pit</td>
         <td>Enemies in Jagged Ground you create take 10% increased Damage</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5480,6 +6098,7 @@
         <td>Isolation</td>
         <td>Enhanced Barrier</td>
         <td>25% increased maximum Energy Shield <br> +1% to all Maximum Elemental Resistances </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5489,6 +6108,7 @@
         <td>Paranoia</td>
         <td>Catalysis</td>
         <td>20% increased Elemental Damage with Attacks <br> 5% of Physical Damage from Hits taken as Damage of a Random Element </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5498,6 +6118,7 @@
         <td>Isolation</td>
         <td>Wide Barrier</td>
         <td>30% increased Block chance <br> 25% reduced Global Defences </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5507,6 +6128,7 @@
         <td>Isolation</td>
         <td>Unimpeded</td>
         <td>24% reduced Slowing Potency of Debuffs on You</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5516,6 +6138,7 @@
         <td>Envy</td>
         <td>Zone of Control</td>
         <td>40% increased Area of Effect of Curses <br> 8% increased Effect of your Curses <br> Enemies you Curse are Hindered, with 15% reduced Movement Speed<br>  </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5525,6 +6148,7 @@
         <td>Isolation</td>
         <td>Cremation</td>
         <td>Damage Penetrates 18% Fire Resistance <br> 25% increased Fire Exposure Effect </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5534,6 +6158,7 @@
         <td>Isolation</td>
         <td>Dark Entries</td>
         <td>+1 to Level of all Chaos Skills</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5543,6 +6168,7 @@
         <td>Despair</td>
         <td>Vocal Empowerment</td>
         <td>Warcries Empower an additional Attack</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5552,6 +6178,7 @@
         <td>Isolation</td>
         <td>Wild Storm</td>
         <td>15% more Maximum Lightning Damage</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5561,6 +6188,7 @@
         <td>Fear</td>
         <td>Enraged Reaver</td>
         <td>+10 to Maximum Rage while wielding an Axe</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5570,6 +6198,7 @@
         <td>Isolation</td>
         <td>Lightning Rod</td>
         <td>Lightning Damage with Non-Critical Hits is Lucky</td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5579,6 +6208,7 @@
         <td>Suffering</td>
         <td>Prism Guard</td>
         <td>+1% to all Maximum Elemental Resistances <br> +5% to all Elemental Resistances </td>
+        <td class="conversion-info"></td>
     </tr>
     
 
@@ -5588,6 +6218,7 @@
         <td>Isolation</td>
         <td>Unnatural Resilience</td>
         <td>2% to Maximum Fire Resistance for each 40% Uncapped Fire Resistance</td>
+        <td class="conversion-info"></td>
     </tr>
     
                 </tbody>
@@ -5596,10 +6227,58 @@
     </div>
 
     <script>
+        const oilTiers = {"Ire": 1, "Guilt": 2, "Greed": 3, "Paranoia": 4, "Envy": 5, "Disgust": 6, "Despair": 7, "Fear": 8, "Suffering": 9, "Isolation": 10};
+        const tierToOil = {"1": "Ire", "2": "Guilt", "3": "Greed", "4": "Paranoia", "5": "Envy", "6": "Disgust", "7": "Despair", "8": "Fear", "9": "Suffering", "10": "Isolation"};
+        
+        function canMakeOil(availableOils, targetOil, quantity) {
+            const targetTier = oilTiers[targetOil];
+            let oilCounts = {...availableOils};
+            
+            // First check if we have enough of the target oil directly
+            if (oilCounts[targetOil] >= quantity) {
+                return {possible: true, conversions: []};
+            }
+            
+            let needed = quantity - (oilCounts[targetOil] || 0);
+            let conversions = [];
+            
+            // Check each tier below the target tier
+            for (let tier = 1; tier < targetTier; tier++) {
+                let currentOil = tierToOil[tier];
+                let nextOil = tierToOil[tier + 1];
+                let available = oilCounts[currentOil] || 0;
+                
+                // How many sets of 3 can we convert?
+                let sets = Math.floor(available / 3);
+                if (sets > 0) {
+                    // How many do we actually need to convert?
+                    let use = Math.min(sets, Math.ceil(needed));
+                    conversions.push(`Convert ${use * 3}x ${currentOil} to ${use}x ${nextOil}`);
+                    
+                    // Update our counts
+                    oilCounts[currentOil] -= use * 3;
+                    oilCounts[nextOil] = (oilCounts[nextOil] || 0) + use;
+                    
+                    if (tier + 1 === targetTier) {
+                        needed -= use;
+                    }
+                }
+            }
+            
+            // After all possible conversions, do we have enough?
+            return {
+                possible: oilCounts[targetOil] >= quantity - needed,
+                conversions: conversions
+            };
+        }
+
         function updateTable() {
-            const selectedOils = Array.from(document.querySelectorAll('input[name="oil"]:checked'))
-                                    .map(cb => cb.value);
             const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const inputs = document.querySelectorAll('.oil-input');
+            const availableOils = Array.from(inputs).reduce((acc, input) => {
+                acc[input.id] = parseInt(input.value) || 0;
+                return acc;
+            }, {});
             
             const rows = document.querySelectorAll('#resultsBody tr');
             
@@ -5609,12 +6288,20 @@
                 const oil3 = row.children[2].textContent;
                 const passive = row.children[3].textContent.toLowerCase();
                 const effect = row.children[4].textContent.toLowerCase();
+                const conversionCell = row.children[5];
                 
-                const matchesOils = selectedOils.length === 0 || (
-                    selectedOils.includes(oil1) && 
-                    selectedOils.includes(oil2) && 
-                    selectedOils.includes(oil3)
-                );
+                // Check if we can make each oil
+                const result1 = canMakeOil(availableOils, oil1, 1);
+                const result2 = canMakeOil(availableOils, oil2, 1);
+                const result3 = canMakeOil(availableOils, oil3, 1);
+                
+                const isPossible = result1.possible && result2.possible && result3.possible;
+                
+                // Combine all needed conversions
+                const allConversions = [...result1.conversions, ...result2.conversions, ...result3.conversions];
+                conversionCell.innerHTML = allConversions.join('<br>');
+                conversionCell.className = isPossible ? 
+                    (allConversions.length > 0 ? 'conversion-needed' : 'has-all-oils') : '';
                 
                 const matchesSearch = searchText === '' || 
                     passive.includes(searchText) ||
@@ -5623,16 +6310,19 @@
                     oil2.toLowerCase().includes(searchText) ||
                     oil3.toLowerCase().includes(searchText);
                 
-                row.style.display = (matchesOils && matchesSearch) ? '' : 'none';
+                row.style.display = (isPossible && matchesSearch) ? '' : 'none';
             });
         }
 
-        // Add event listeners to checkboxes and search input
-        document.querySelectorAll('input[name="oil"]').forEach(checkbox => {
-            checkbox.addEventListener('change', updateTable);
+        // Add event listeners
+        document.querySelectorAll('.oil-input').forEach(input => {
+            input.addEventListener('input', updateTable);
         });
         
         document.getElementById('searchInput').addEventListener('input', updateTable);
+        
+        // Initial update
+        updateTable();
     </script>
 </body>
 </html>
