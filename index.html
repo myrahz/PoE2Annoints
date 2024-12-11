@@ -39,7 +39,7 @@
             margin-bottom: 20px;
         }
         .input-item {
-            flex: 1 1 calc(20% - 10px);  /* 20% width for 5 items per row, minus the gap */
+            flex: 1 1 calc(20% - 10px);
             min-width: 200px;
             display: flex;
             justify-content: space-between;
@@ -6230,87 +6230,94 @@
         const oilTiers = {"Ire": 1, "Guilt": 2, "Greed": 3, "Paranoia": 4, "Envy": 5, "Disgust": 6, "Despair": 7, "Fear": 8, "Suffering": 9, "Isolation": 10};
         const tierToOil = {"1": "Ire", "2": "Guilt", "3": "Greed", "4": "Paranoia", "5": "Envy", "6": "Disgust", "7": "Despair", "8": "Fear", "9": "Suffering", "10": "Isolation"};
         
-        function canMakeOil(availableOils, targetOil, quantity) {
-            const targetTier = oilTiers[targetOil];
-            let oilCounts = {...availableOils};
+        function calculateRecipePossibilities(baseOils, recipe) {
+            // Deep copy of base oils to track consumption
+            let availableOils = {...baseOils};
+            let neededConversions = [];
             
-            // First check if we have enough of the target oil directly
-            if (oilCounts[targetOil] >= quantity) {
-                return {possible: true, conversions: []};
-            }
+            // Count how many of each oil we need
+            let oilsNeeded = recipe.reduce((acc, oil) => {
+                acc[oil] = (acc[oil] || 0) + 1;
+                return acc;
+            }, {});
             
-            let needed = quantity - (oilCounts[targetOil] || 0);
-            let conversions = [];
-            
-            // Check each tier below the target tier
-            for (let tier = 1; tier < targetTier; tier++) {
-                let currentOil = tierToOil[tier];
-                let nextOil = tierToOil[tier + 1];
-                let available = oilCounts[currentOil] || 0;
+            // Check each required oil and its quantity
+            for (const [neededOil, quantity] of Object.entries(oilsNeeded)) {
+                let stillNeeded = quantity;
                 
-                // How many sets of 3 can we convert?
-                let sets = Math.floor(available / 3);
-                if (sets > 0) {
-                    // How many do we actually need to convert?
-                    let use = Math.min(sets, Math.ceil(needed));
-                    conversions.push(`Convert ${use * 3}x ${currentOil} to ${use}x ${nextOil}`);
+                // First use direct oils if available
+                if (availableOils[neededOil]) {
+                    const used = Math.min(availableOils[neededOil], stillNeeded);
+                    availableOils[neededOil] -= used;
+                    stillNeeded -= used;
+                }
+                
+                // If we still need more oils, try conversions
+                while (stillNeeded > 0) {
+                    const targetTier = oilTiers[neededOil];
+                    let conversionFound = false;
                     
-                    // Update our counts
-                    oilCounts[currentOil] -= use * 3;
-                    oilCounts[nextOil] = (oilCounts[nextOil] || 0) + use;
+                    // Try to convert from each lower tier
+                    for (let currentTier = targetTier - 1; currentTier >= 1; currentTier--) {
+                        const currentOil = tierToOil[currentTier];
+                        const oilsRequiredForOne = Math.pow(3, targetTier - currentTier);
+                        
+                        if ((availableOils[currentOil] || 0) >= oilsRequiredForOne) {
+                            // We can convert from this tier
+                            availableOils[currentOil] -= oilsRequiredForOne;
+                            neededConversions.push(
+                                `Convert ${oilsRequiredForOne}x ${currentOil} to 1x ${neededOil}`
+                            );
+                            stillNeeded--;
+                            conversionFound = true;
+                            break;
+                        }
+                    }
                     
-                    if (tier + 1 === targetTier) {
-                        needed -= use;
+                    if (!conversionFound) {
+                        return { possible: false, conversions: [] };
                     }
                 }
             }
             
-            // After all possible conversions, do we have enough?
-            return {
-                possible: oilCounts[targetOil] >= quantity - needed,
-                conversions: conversions
+            return { 
+                possible: true, 
+                conversions: neededConversions
             };
         }
 
         function updateTable() {
             const searchText = document.getElementById('searchInput').value.toLowerCase();
             const inputs = document.querySelectorAll('.oil-input');
-            const availableOils = Array.from(inputs).reduce((acc, input) => {
+            const baseOils = Array.from(inputs).reduce((acc, input) => {
                 acc[input.id] = parseInt(input.value) || 0;
                 return acc;
             }, {});
             
             const rows = document.querySelectorAll('#resultsBody tr');
-            
             rows.forEach(row => {
-                const oil1 = row.children[0].textContent;
-                const oil2 = row.children[1].textContent;
-                const oil3 = row.children[2].textContent;
+                const recipe = [
+                    row.children[0].textContent,
+                    row.children[1].textContent,
+                    row.children[2].textContent
+                ];
                 const passive = row.children[3].textContent.toLowerCase();
                 const effect = row.children[4].textContent.toLowerCase();
                 const conversionCell = row.children[5];
                 
-                // Check if we can make each oil
-                const result1 = canMakeOil(availableOils, oil1, 1);
-                const result2 = canMakeOil(availableOils, oil2, 1);
-                const result3 = canMakeOil(availableOils, oil3, 1);
+                // Check recipe possibility
+                const result = calculateRecipePossibilities(baseOils, recipe);
                 
-                const isPossible = result1.possible && result2.possible && result3.possible;
-                
-                // Combine all needed conversions
-                const allConversions = [...result1.conversions, ...result2.conversions, ...result3.conversions];
-                conversionCell.innerHTML = allConversions.join('<br>');
-                conversionCell.className = isPossible ? 
-                    (allConversions.length > 0 ? 'conversion-needed' : 'has-all-oils') : '';
+                conversionCell.innerHTML = result.conversions.join('<br>');
+                conversionCell.className = result.possible ? 
+                    (result.conversions.length > 0 ? 'conversion-needed' : 'has-all-oils') : '';
                 
                 const matchesSearch = searchText === '' || 
                     passive.includes(searchText) ||
                     effect.includes(searchText) ||
-                    oil1.toLowerCase().includes(searchText) ||
-                    oil2.toLowerCase().includes(searchText) ||
-                    oil3.toLowerCase().includes(searchText);
+                    recipe.some(oil => oil.toLowerCase().includes(searchText));
                 
-                row.style.display = (isPossible && matchesSearch) ? '' : 'none';
+                row.style.display = (result.possible && matchesSearch) ? '' : 'none';
             });
         }
 
