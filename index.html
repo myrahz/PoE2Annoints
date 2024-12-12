@@ -112,11 +112,36 @@
             margin-bottom: 10px;
             font-weight: bold;
         }
+        .debug-button {
+            margin: 10px 0;
+            padding: 8px 16px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .debug-button:hover {
+            background-color: #e0e0e0;
+        }
+
+        .debug-info {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            
+            font-family: monospace;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Oil Combinations</h1>
+        <div style="display: flex; justify-content: space-between; align-items: center">
+    <h1>Oil Combinations</h1>
+    <button onclick="toggleDebug()" class="debug-button">Toggle Debug Info</button>
+</div>
         
         <div class="filters">
             <h2>Available Oils</h2>
@@ -193,7 +218,10 @@
     </div>
     
             </div>
+            <div id="debugInfo" class="debug-info" style="display: none;"></div>
         </div>
+        
+        
 
         <div class="stats">
             Showing <span id="recipeCounter">0</span> recipes
@@ -6240,160 +6268,182 @@
     <script>
         const oilTiers = {"Ire": 1, "Guilt": 2, "Greed": 3, "Paranoia": 4, "Envy": 5, "Disgust": 6, "Despair": 7, "Fear": 8, "Suffering": 9, "Isolation": 10};
         const tierToOil = {"1": "Ire", "2": "Guilt", "3": "Greed", "4": "Paranoia", "5": "Envy", "6": "Disgust", "7": "Despair", "8": "Fear", "9": "Suffering", "10": "Isolation"};
-        
-        function calculateTotalPossibleOils(baseOils) {
-            // First, get all possible sets of oils after all possible conversions
-            let allSets = [baseOils];  // Start with base set
-            let changed = true;
+        // First, modify the calculateTotalPossibleOils function to track each unique state
+function calculateTotalPossibleOils(baseOils) {
+    let allStates = [baseOils]; // Start with initial state
+    let newStatesFound = true;
 
-            while (changed) {
-                changed = false;
-                let currentSet = {...allSets[allSets.length - 1]};
-                
-                // Try each possible conversion
-                for (let tier = 1; tier <= 9; tier++) {
-                    const currentOil = tierToOil[tier];
-                    if ((currentSet[currentOil] || 0) >= 3) {
-                        // Try converting these oils
-                        let newSet = {...currentSet};
-                        const sets = Math.floor(newSet[currentOil] / 3);
-                        newSet[currentOil] -= sets * 3;
-                        newSet[tierToOil[tier + 1]] = (newSet[tierToOil[tier + 1]] || 0) + sets;
-                        
-                        // Add this as a new possibility if it's unique
-                        if (!allSets.some(set => JSON.stringify(set) === JSON.stringify(newSet))) {
-                            allSets.push(newSet);
-                            changed = true;
-                        }
+    while (newStatesFound) {
+        newStatesFound = false;
+        const currentStatesCount = allStates.length;
+        
+        // Try each state we have
+        for (let stateIndex = 0; stateIndex < currentStatesCount; stateIndex++) {
+            const currentState = {...allStates[stateIndex]};
+            
+            // Try converting each tier
+            for (let tier = 1; tier <= 9; tier++) {
+                const currentOil = tierToOil[tier];
+                if ((currentState[currentOil] || 0) >= 3) {
+                    // Create new state with this conversion
+                    let newState = {...currentState};
+                    newState[currentOil] -= 3;
+                    if (newState[currentOil] === 0) delete newState[currentOil];
+                    newState[tierToOil[tier + 1]] = (newState[tierToOil[tier + 1]] || 0) + 1;
+                    
+                    // Check if this state is unique
+                    if (!allStates.some(state => 
+                        JSON.stringify(Object.entries(state).sort()) === 
+                        JSON.stringify(Object.entries(newState).sort())
+                    )) {
+                        allStates.push(newState);
+                        newStatesFound = true;
                     }
                 }
             }
-            
-            // Combine all sets into maximum possible quantities for each oil
-            let maxPossible = {...baseOils};
-            allSets.forEach(set => {
-                Object.entries(set).forEach(([oil, qty]) => {
-                    maxPossible[oil] = Math.max(maxPossible[oil] || 0, qty);
-                });
-            });
-            
-            return maxPossible;
+        }
+    }
+    
+    return allStates;
+}
+
+function calculateRecipePossibilities(baseOils, recipe) {
+    // Get all possible states
+    const allPossibleStates = calculateTotalPossibleOils(baseOils);
+    
+    // For each state, check if recipe is possible
+    const possibleStates = allPossibleStates.filter(state => {
+        const stateCopy = {...state};
+        return recipe.every(oil => {
+            if ((stateCopy[oil] || 0) > 0) {
+                stateCopy[oil]--;
+                return true;
+            }
+            return false;
+        });
+    });
+
+    if (possibleStates.length === 0) {
+        return {
+            possible: false,
+            conversions: [],
+            allStates: allPossibleStates
+        };
+    }
+
+    // Generate conversion paths for each possible state
+    const conversionPaths = possibleStates.map(targetState => {
+        const path = [];
+        const initialState = {...baseOils};
+        const differences = {};
+        
+        // Calculate differences between initial and target state
+        Object.keys({...initialState, ...targetState}).forEach(oil => {
+            const diff = (targetState[oil] || 0) - (initialState[oil] || 0);
+            if (diff !== 0) {
+                differences[oil] = diff;
+            }
+        });
+
+        // Create human-readable conversion path
+        Object.entries(differences).forEach(([oil, diff]) => {
+            if (diff > 0) {
+                path.push(`${diff}x ${oil}`);
+            } else if (diff < 0) {
+                path.push(`Convert ${Math.abs(diff)}x ${oil}`);
+            }
+        });
+
+        return path;
+    });
+
+    return {
+        possible: true,
+        conversions: conversionPaths,
+        allStates: allPossibleStates
+    };
+}
+
+function updateTable() {
+    const searchText = document.getElementById('searchInput').value.toLowerCase();
+    const inputs = document.querySelectorAll('.oil-input');
+    const baseOils = Array.from(inputs).reduce((acc, input) => {
+        const value = parseInt(input.value) || 0;
+        if (value > 0) {
+            acc[input.id] = value;
+        }
+        return acc;
+    }, {});
+    
+    // Display all possible combinations
+    const allStates = calculateTotalPossibleOils(baseOils);
+    
+     // Update debug info if enabled
+    const debugDiv = document.getElementById('debugInfo');
+    if (debugDiv && debugDiv.style.display !== 'none') {
+        debugDiv.innerHTML = `
+            <strong>All possible oil combinations:</strong><br>
+            ${allStates.map((state, index) => 
+                `Combination ${index + 1}: ` + 
+                Object.entries(state)
+                    .map(([oil, count]) => `${count}x ${oil}`)
+                    .join(', ')
+            ).join('<br>')}
+        `;
+    }
+    
+    const rows = document.querySelectorAll('#resultsBody tr');
+    let visibleCount = 0;
+    
+    rows.forEach(row => {
+        const recipe = [
+            row.children[0].textContent,
+            row.children[1].textContent,
+            row.children[2].textContent
+        ];
+        const passive = row.children[3].textContent.toLowerCase();
+        const effect = row.children[4].textContent.toLowerCase();
+        const conversionCell = row.children[5];
+        
+        const result = calculateRecipePossibilities(baseOils, recipe);
+        
+        if (result.possible) {
+            conversionCell.innerHTML = result.conversions.map(path => 
+                path.join('<br>')
+            ).join('<br><hr><br>');
+            conversionCell.className = result.conversions.some(path => path.length > 0) ? 
+                'conversion-needed' : 'has-all-oils';
+        } else {
+            conversionCell.innerHTML = '';
+            conversionCell.className = '';
         }
         
-        function calculateRecipePossibilities(baseOils, recipe) {
-            // Get all possible oil combinations
-            const possibleOils = calculateTotalPossibleOils(baseOils);
-            
-            // Count needed oils
-            let oilsNeeded = recipe.reduce((acc, oil) => {
-                acc[oil] = (acc[oil] || 0) + 1;
-                return acc;
-            }, {});
-            
-            // Check if recipe is possible with any combination
-            for (const [oil, needed] of Object.entries(oilsNeeded)) {
-                if ((possibleOils[oil] || 0) < needed) {
-                    return {possible: false, conversions: []};
-                }
-            }
-            
-            // If we get here, recipe is possible. Calculate needed conversions
-            let conversions = [];
-            let remainingOils = {...baseOils};
-            let targetOils = {...baseOils};
-            
-            for (const [neededOil, quantity] of Object.entries(oilsNeeded)) {
-                let stillNeeded = quantity;
-                
-                // First use direct oils
-                if (remainingOils[neededOil]) {
-                    const using = Math.min(remainingOils[neededOil], stillNeeded);
-                    remainingOils[neededOil] -= using;
-                    stillNeeded -= using;
-                }
-                
-                if (stillNeeded > 0) {
-                    // Need conversions. Start from lowest tier
-                    for (let tier = 1; tier < oilTiers[neededOil]; tier++) {
-                        const currentOil = tierToOil[tier];
-                        const available = remainingOils[currentOil] || 0;
-                        
-                        if (available >= 3) {
-                            const targetTier = oilTiers[neededOil];
-                            const conversionSteps = targetTier - tier;
-                            const baseNeeded = Math.pow(3, conversionSteps);
-                            
-                            if (available >= baseNeeded) {
-                                const sets = Math.min(Math.floor(available / baseNeeded), stillNeeded);
-                                if (sets > 0) {
-                                    remainingOils[currentOil] -= sets * baseNeeded;
-                                    conversions.push(`Convert ${sets * baseNeeded}x ${currentOil} to ${sets}x ${neededOil}`);
-                                    stillNeeded -= sets;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            
-            return {
-                possible: true,
-                conversions: conversions
-            };
-        }
+        const matchesSearch = searchText === '' || 
+            passive.includes(searchText) ||
+            effect.includes(searchText) ||
+            recipe.some(oil => oil.toLowerCase().includes(searchText));
+        
+        const isVisible = (result.possible && matchesSearch);
+        row.style.display = isVisible ? '' : 'none';
+        if (isVisible) visibleCount++;
+    });
+    
+    // Update recipe counter
+    const statsDiv = document.querySelector('.stats');
+    statsDiv.innerHTML = `Showing ${visibleCount} recipes`;
+}
 
-        function updateTable() {
-            const searchText = document.getElementById('searchInput').value.toLowerCase();
-            const inputs = document.querySelectorAll('.oil-input');
-            const baseOils = Array.from(inputs).reduce((acc, input) => {
-                acc[input.id] = parseInt(input.value) || 0;
-                return acc;
-            }, {});
-            
-            const possibleOils = calculateTotalPossibleOils(baseOils);
-            const rows = document.querySelectorAll('#resultsBody tr');
-            let visibleCount = 0;
-            
-            rows.forEach(row => {
-                const recipe = [
-                    row.children[0].textContent,
-                    row.children[1].textContent,
-                    row.children[2].textContent
-                ];
-                const passive = row.children[3].textContent.toLowerCase();
-                const effect = row.children[4].textContent.toLowerCase();
-                const conversionCell = row.children[5];
-                
-                // Check recipe possibility and get conversion path
-                const result = calculateRecipePossibilities(baseOils, recipe);
-                
-                // Update conversion info cell
-                if (result.possible) {
-                    if (result.conversions.length > 0) {
-                        conversionCell.innerHTML = result.conversions.join('<br>');
-                        conversionCell.className = 'conversion-needed';
-                    } else {
-                        conversionCell.innerHTML = 'Available directly';
-                        conversionCell.className = 'has-all-oils';
-                    }
-                } else {
-                    conversionCell.innerHTML = '';
-                    conversionCell.className = '';
-                }
-                
-                const matchesSearch = searchText === '' || 
-                    passive.includes(searchText) ||
-                    effect.includes(searchText) ||
-                    recipe.some(oil => oil.toLowerCase().includes(searchText));
-                
-                const isVisible = (result.possible && matchesSearch);
-                row.style.display = isVisible ? '' : 'none';
-                if (isVisible) visibleCount++;
-            });
-            
-            // Update the counter
-            document.getElementById('recipeCounter').textContent = visibleCount;
-        }
+// Add debug toggle button function
+function toggleDebug() {
+    const debugDiv = document.getElementById('debugInfo');
+    if (debugDiv.style.display === 'none') {
+        debugDiv.style.display = 'block';
+    } else {
+        debugDiv.style.display = 'none';
+    }
+    updateTable();
+}
+      
 
         // Add event listeners
         document.querySelectorAll('.oil-input').forEach(input => {
